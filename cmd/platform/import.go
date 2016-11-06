@@ -27,7 +27,7 @@ var slackImportCmd = &cobra.Command{
 var bulkImportCmd = &cobra.Command{
 	Use:     "bulk [file]",
 	Short:   "Import bulk data.",
-	Long:    "Import data from a Mattermost Bulk Import File.",
+	Long:    "Import data from a uChat Bulk Import File.",
 	Example: "  import bulk bulk_data.json",
 	RunE:    bulkImportCmdF,
 }

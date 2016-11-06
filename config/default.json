@@ -54,7 +54,7 @@
         "ClusterLogTimeoutMilliseconds": 2000
     },
     "TeamSettings": {
-        "SiteName": "Mattermost",
+        "SiteName": "uChat",
         "MaxUsersPerTeam": 50,
         "EnableTeamCreation": true,
         "EnableUserCreation": true,
@@ -276,7 +276,8 @@
     "NativeAppSettings": {
         "AppDownloadLink": "https://about.mattermost.com/downloads/",
         "AndroidAppDownloadLink": "https://about.mattermost.com/mattermost-android-app/",
-        "IosAppDownloadLink": "https://about.mattermost.com/mattermost-ios-app/"
+        "IosAppDownloadLink": "https://about.mattermost.com/mattermost-ios-app/",
+        "IosAppUrlScheme": ""
     },
     "ClusterSettings": {
         "Enable": false,

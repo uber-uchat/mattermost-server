@@ -93,7 +93,7 @@
   },
   {
     "id": "api.admin.test_email.body",
-    "translation": "<br/><br/><br/>It appears your Mattermost email is setup correctly!"
+    "translation": "<br/><br/><br/>It appears your uChat email is setup correctly!"
   },
   {
     "id": "api.admin.test_email.missing_server",
@@ -105,7 +105,7 @@
   },
   {
     "id": "api.admin.test_email.subject",
-    "translation": "Mattermost - Testing Email Settings"
+    "translation": "uChat - Testing Email Settings"
   },
   {
     "id": "api.admin.upload_brand_image.array.app_error",
@@ -445,7 +445,7 @@
   },
   {
     "id": "api.command.invite_people.desc",
-    "translation": "Send an email invite to your Mattermost team"
+    "translation": "Send an email invite to your uChat team"
   },
   {
     "id": "api.command.invite_people.email_off",
@@ -681,7 +681,7 @@
   },
   {
     "id": "api.command_help.desc",
-    "translation": "Open the Mattermost help page"
+    "translation": "Open the uChat help page"
   },
   {
     "id": "api.command_help.name",
@@ -741,7 +741,7 @@
   },
   {
     "id": "api.command_logout.desc",
-    "translation": "Logout of Mattermost"
+    "translation": "Logout of uChat"
   },
   {
     "id": "api.command_logout.fail_message",
@@ -1873,7 +1873,7 @@
   },
   {
     "id": "api.slackimport.slack_add_channels.merge",
-    "translation": "The Slack channel {{.DisplayName}} already exists as an active Mattermost channel. Both channels have been merged.\r\n"
+    "translation": "The Slack channel {{.DisplayName}} already exists as an active uChat channel. Both channels have been merged.\r\n"
   },
   {
     "id": "api.slackimport.slack_add_posts.attach_files.error",
@@ -1921,7 +1921,7 @@
   },
   {
     "id": "api.slackimport.slack_add_posts.user_no_exists.debug",
-    "translation": "Slack Import: Unable to add the message as the Slack user %v does not exist in Mattermost."
+    "translation": "Slack Import: Unable to add the message as the Slack user %v does not exist in uChat."
   },
   {
     "id": "api.slackimport.slack_add_posts.without_user.debug",
@@ -1937,11 +1937,11 @@
   },
   {
     "id": "api.slackimport.slack_add_users.merge_existing",
-    "translation": "Slack user merged with an existing Mattermost user with matching email {{.Email}} and username {{.Username}}.\r\n"
+    "translation": "Slack user merged with an existing uChat user with matching email {{.Email}} and username {{.Username}}.\r\n"
   },
   {
     "id": "api.slackimport.slack_add_users.merge_existing_failed",
-    "translation": "Slack user merged with an existing Mattermost user with matching email {{.Email}} and username {{.Username}}, but was unable to add the user to their team.\r\n"
+    "translation": "Slack user merged with an existing uChat user with matching email {{.Email}} and username {{.Username}}, but was unable to add the user to their team.\r\n"
   },
   {
     "id": "api.slackimport.slack_add_users.missing_email_address",
@@ -1973,7 +1973,7 @@
   },
   {
     "id": "api.slackimport.slack_import.log",
-    "translation": "Mattermost Slack Import Log\r\n"
+    "translation": "uChat Slack Import Log\r\n"
   },
   {
     "id": "api.slackimport.slack_import.note1",
@@ -2189,7 +2189,7 @@
   },
   {
     "id": "api.templates.email_change_body.info",
-    "translation": "Your email address for {{.TeamDisplayName}} has been changed to {{.NewEmail}}.<br>If you did not make this change, please contact the system administrator."
+    "translation": "Your email address has been changed to {{.NewEmail}}.<br>If you did not make this change, please contact the system administrator."
   },
   {
     "id": "api.templates.email_change_body.title",
@@ -2205,7 +2205,7 @@
   },
   {
     "id": "api.templates.email_change_verify_body.info",
-    "translation": "To finish updating your email address for {{.TeamDisplayName}}, please click the link below to confirm this is the right address."
+    "translation": "To finish updating your email address, please click the link below to confirm this is the right address."
   },
   {
     "id": "api.templates.email_change_verify_body.title",
@@ -2217,7 +2217,7 @@
   },
   {
     "id": "api.templates.email_footer",
-    "translation": "To change your notification preferences, log in to your team site and go to Account Settings > Notifications."
+    "translation": "To change your notification preferences, log in and go to Account Settings > Notifications."
   },
   {
     "id": "api.templates.email_info",
@@ -2249,11 +2249,11 @@
   },
   {
     "id": "api.templates.invite_body.extra_info",
-    "translation": "Mattermost lets you share messages and files from your PC or phone, with instant search and archiving. After you’ve joined <strong>{{.TeamDisplayName}}</strong>, you can sign-in to your new team and access these features anytime from the web address:<br/><br/><a href='{{.TeamURL}}'>{{.TeamURL}}</a>"
+    "translation": "uChat lets you share messages and files from your PC or phone, with instant search and archiving. After you’ve joined, you can sign-in to your new team and access these features anytime from the web address:<br/><br/><a href='{{.TeamURL}}'>{{.TeamURL}}</a>"
   },
   {
     "id": "api.templates.invite_body.info",
-    "translation": "The team {{.SenderStatus}} <strong>{{.SenderName}}</strong>, has invited you to join <strong>{{.TeamDisplayName}}</strong>."
+    "translation": "The team {{.SenderStatus}} <strong>{{.SenderName}}</strong>, has invited you to join."
   },
   {
     "id": "api.templates.invite_body.title",
@@ -2261,7 +2261,7 @@
   },
   {
     "id": "api.templates.invite_subject",
-    "translation": "[{{ .SiteName }}] {{ .SenderName }} invited you to join {{ .TeamDisplayName }} Team"
+    "translation": "{{ .SenderName }} invited you to join {{.SiteName}}"
   },
   {
     "id": "api.templates.mfa_activated_body.info",
@@ -2285,7 +2285,7 @@
   },
   {
     "id": "api.templates.password_change_body.info",
-    "translation": "Your password has been updated for {{.TeamDisplayName}} on {{ .TeamURL }} by {{.Method}}.<br>If this change wasn't initiated by you, please contact your system administrator."
+    "translation": "Your password has been updated for by {{.Method}}.<br>If this change wasn't initiated by you, please contact your system administrator."
   },
   {
     "id": "api.templates.password_change_body.title",
@@ -2293,7 +2293,7 @@
   },
   {
     "id": "api.templates.password_change_subject",
-    "translation": "[{{ .SiteName }}] Your password has been updated"
+    "translation": "Your password has been updated on {{ .SiteName }}"
   },
   {
     "id": "api.templates.post_body.button",
@@ -2349,11 +2349,11 @@
   },
   {
     "id": "api.templates.upgrade_30_body.info",
-    "translation": "<h3 style='font-weight: normal; margin-top: 10px;'>YOUR DUPLICATE ACCOUNTS HAVE BEEN UPDATED</h3>Your Mattermost server is being upgraded to Version 3.0, which lets you use a single account across multiple teams.<br/><br/>You are receiving this email because the upgrade process has detected your account had the same email or username as other accounts on the server.<br/><br/>The following updates have been made: <br/><br/>{{if .EmailChanged }}- The duplicate email of an account on the `/{{.TeamName}}` team was changed to `{{.Email}}`. You will need to use email and password to login, you can use this new email address for login.<br/><br/>{{end}}{{if .UsernameChanged }}- The duplicate username of an account on the team site `/{{.TeamName}}` has been changed to `{{.Username}}` to avoid confusion with other accounts.<br/><br/>{{end}} RECOMMENDED ACTION: <br/><br/>It is recommended that you login to your teams used by your duplicate accounts and add your primary account to the team and any channels which you wish to continue using. <br/><br/>This gives your primary account access to all channel history. You can continue to access the direct message history of your duplicate accounts by logging in with their credentials. <br/><br/>FOR MORE INFORMATION: <br/><br/>For more information on the upgrade to Mattermost 3.0 please see: <a href='http://www.mattermost.org/upgrading-to-mattermost-3-0/'>http://www.mattermost.org/upgrading-to-mattermost-3-0/</a><br/><br/>"
+    "translation": "<h3 style='font-weight: normal; margin-top: 10px;'>YOUR DUPLICATE ACCOUNTS HAVE BEEN UPDATED</h3>Your uChat server is being upgraded to Version 3.0, which lets you use a single account across multiple teams.<br/><br/>You are receiving this email because the upgrade process has detected your account had the same email or username as other accounts on the server.<br/><br/>The following updates have been made: <br/><br/>{{if .EmailChanged }}- The duplicate email of an account on the `/{{.TeamName}}` team was changed to `{{.Email}}`. You will need to use email and password to login, you can use this new email address for login.<br/><br/>{{end}}{{if .UsernameChanged }}- The duplicate username of an account on the team site `/{{.TeamName}}` has been changed to `{{.Username}}` to avoid confusion with other accounts.<br/><br/>{{end}} RECOMMENDED ACTION: <br/><br/>It is recommended that you login to your teams used by your duplicate accounts and add your primary account to the team and any channels which you wish to continue using. <br/><br/>This gives your primary account access to all channel history. You can continue to access the direct message history of your duplicate accounts by logging in with their credentials. <br/><br/>FOR MORE INFORMATION: <br/><br/>For more information on the upgrade to uChat 3.0 please see: <a href='http://www.mattermost.org/upgrading-to-mattermost-3-0/'>http://www.mattermost.org/upgrading-to-mattermost-3-0/</a><br/><br/>"
   },
   {
     "id": "api.templates.upgrade_30_subject.info",
-    "translation": "[MATTERMOST] Changes to your account for Mattermost 3.0 Upgrade"
+    "translation": "[MATTERMOST] Changes to your account for uChat 3.0 Upgrade"
   },
   {
     "id": "api.templates.user_access_token_body.info",
@@ -2369,7 +2369,7 @@
   },
   {
     "id": "api.templates.username_change_body.info",
-    "translation": "Your username for {{.TeamDisplayName}} has been changed to {{.NewUsername}}.<br>If you did not make this change, please contact the system administrator."
+    "translation": "Your username has been changed to {{.NewUsername}}.<br>If you did not make this change, please contact the system administrator."
   },
   {
     "id": "api.templates.username_change_body.title",
@@ -2397,7 +2397,7 @@
   },
   {
     "id": "api.templates.welcome_body.app_download_info",
-    "translation": "For the best experience, download the apps for PC, Mac, iOS and Android from:"
+    "translation": "Get {{ .SiteName }} today by visiting our download page:"
   },
   {
     "id": "api.templates.welcome_body.button",
@@ -2413,15 +2413,15 @@
   },
   {
     "id": "api.templates.welcome_body.info3",
-    "translation": "Mattermost lets you share messages and files from your PC or phone, with instant search and archiving."
+    "translation": "Hi There! You are receiving this email because you and your team have been given access to uChat."
   },
   {
     "id": "api.templates.welcome_body.title",
-    "translation": "You've joined {{ .ServerURL }}"
+    "translation": "Welcome to {{ .SiteName }}!"
   },
   {
     "id": "api.templates.welcome_subject",
-    "translation": "[{{ .SiteName }}] You joined {{ .ServerURL }}"
+    "translation": "Welcome to {{ .SiteName }}!"
   },
   {
     "id": "api.user.activate_mfa.email_and_ldap_only.app_error",
@@ -3833,7 +3833,7 @@
   },
   {
     "id": "ent.ldap.do_login.user_filtered.app_error",
-    "translation": "Your AD/LDAP account does not have permission to use this Mattermost server. Please ask your System Administrator to check the AD/LDAP user filter."
+    "translation": "Your AD/LDAP account does not have permission to use this uChat server. Please ask your System Administrator to check the AD/LDAP user filter."
   },
   {
     "id": "ent.ldap.do_login.user_not_registered.app_error",
@@ -3841,7 +3841,7 @@
   },
   {
     "id": "ent.ldap.mattermost_user_update",
-    "translation": "Mattermost user was updated by AD/LDAP server."
+    "translation": "uChat user was updated by AD/LDAP server."
   },
   {
     "id": "ent.ldap.sync.index_job_failed.error",
@@ -4029,7 +4029,7 @@
   },
   {
     "id": "mattermost.bulletin.subject",
-    "translation": "Mattermost Security Bulletin"
+    "translation": "uChat Security Bulletin"
   },
   {
     "id": "mattermost.config_file",
@@ -4057,11 +4057,11 @@
   },
   {
     "id": "mattermost.security_checks.debug",
-    "translation": "Checking for security update from Mattermost"
+    "translation": "Checking for security update from uChat"
   },
   {
     "id": "mattermost.security_info.error",
-    "translation": "Failed to get security update information from Mattermost."
+    "translation": "Failed to get security update information from uChat."
   },
   {
     "id": "mattermost.send_bulletin.info",
@@ -4069,7 +4069,7 @@
   },
   {
     "id": "mattermost.system_admins.error",
-    "translation": "Failed to get system admins for security update information from Mattermost."
+    "translation": "Failed to get system admins for security update information from uChat."
   },
   {
     "id": "mattermost.working_dir",
@@ -5261,7 +5261,7 @@
   },
   {
     "id": "store.sql.schema_version.critical",
-    "translation": "Database schema version %v is no longer supported. This Mattermost server supports automatic upgrades from schema version %v through schema version %v. Downgrades are not supported. Please manually upgrade to at least version %v before continuing"
+    "translation": "Database schema version %v is no longer supported. This uChat server supports automatic upgrades from schema version %v through schema version %v. Downgrades are not supported. Please manually upgrade to at least version %v before continuing"
   },
   {
     "id": "store.sql.short_ciphertext",

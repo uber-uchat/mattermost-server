@@ -25,7 +25,7 @@ var MaxNotificationsPerChannelDefault int64 = 1000000
 
 var serverCmd = &cobra.Command{
 	Use:   "server",
-	Short: "Run the Mattermost server",
+	Short: "Run the uChat server",
 	RunE:  runServerCmd,
 }
 
@@ -43,12 +43,12 @@ func runServerCmd(cmd *cobra.Command, args []string) error {
 
 func runServer(configFileLocation string) {
 	if err := utils.InitAndLoadConfig(configFileLocation); err != nil {
-		l4g.Exit("Unable to load Mattermost configuration file: ", err)
+		l4g.Exit("Unable to load uChat configuration file: ", err)
 		return
 	}
 
 	if err := utils.InitTranslations(utils.Cfg.LocalizationSettings); err != nil {
-		l4g.Exit("Unable to load Mattermost translation files: %v", err)
+		l4g.Exit("Unable to load uChat translation files: %v", err)
 		return
 	}
 
