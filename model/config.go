@@ -508,6 +508,10 @@ type PluginSettings struct {
 	Plugins map[string]interface{}
 }
 
+type UchatConfig struct {
+	EnableLocaleSetting *bool
+}
+
 type Config struct {
 	ServiceSettings       ServiceSettings
 	TeamSettings          TeamSettings
@@ -538,6 +542,7 @@ type Config struct {
 	DataRetentionSettings DataRetentionSettings
 	JobSettings           JobSettings
 	PluginSettings        PluginSettings
+	UchatConfig           UchatConfig
 }
 
 func (o *Config) ToJson() string {

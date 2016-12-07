@@ -334,5 +334,8 @@
     "PluginSettings": {
         "Enable": false,
         "Plugins": {}
+    },
+    "UchatConfig": {
+        "EnableLocaleSetting": false
     }
 }
