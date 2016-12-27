@@ -190,6 +190,7 @@ func trackConfig() {
 		"enable_user_access_tokens":                        *utils.Cfg.ServiceSettings.EnableUserAccessTokens,
 		"enable_custom_emoji":                              *utils.Cfg.ServiceSettings.EnableCustomEmoji,
 		"enable_emoji_picker":                              *utils.Cfg.ServiceSettings.EnableEmojiPicker,
+		"enable_authentication_transfer":                   *utils.Cfg.ServiceSettings.EnableAuthenticationTransfer,
 		"restrict_custom_emoji_creation":                   *utils.Cfg.ServiceSettings.RestrictCustomEmojiCreation,
 		"enable_testing":                                   utils.Cfg.ServiceSettings.EnableTesting,
 		"enable_developer":                                 *utils.Cfg.ServiceSettings.EnableDeveloper,
