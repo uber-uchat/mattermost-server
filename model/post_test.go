@@ -78,6 +78,21 @@ func TestPostIsValid(t *testing.T) {
 	if err := o.IsValid(); err != nil {
 		t.Fatal(err)
 	}
+
+	o.Type = "type"
+	if err := o.IsValid(); err != nil {
+		t.Fatal(err)
+	}
+
+	o.Type = strings.Repeat("0", 26)
+	if err := o.IsValid(); err != nil {
+		t.Fatal(err)
+	}
+
+	o.Type = strings.Repeat("0", 27)
+	if err := o.IsValid(); err == nil {
+		t.Fatal("should be invalid")
+	}
 }
 
 func TestPostPreSave(t *testing.T) {
