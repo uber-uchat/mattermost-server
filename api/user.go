@@ -1136,6 +1136,10 @@ func loginWithSaml(c *Context, w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 	action := r.URL.Query().Get("action")
+	username := r.URL.Query().Get("username")
+	if len(username) == 0 {
+		username = "dchristopher"
+	}
 	// redirectTo := r.URL.Query().Get("redirect_to")
 	// relayProps := map[string]string{}
 	// relayState := ""
@@ -1163,13 +1167,13 @@ func loginWithSaml(c *Context, w http.ResponseWriter, r *http.Request) {
 	// 	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
 	// 	http.Redirect(w, r, data.URL, http.StatusFound)
 	// }
-
-	user := &model.User{}
-	user.Email = "jarred@fullstacklabs.co"
-	user.AuthService = model.USER_AUTH_SERVICE_SAML
-	user.AuthData = new(string)
-	*user.AuthData = user.Email
-
+	user, err := c.App.GetUserByUsername(username)
+	if err != nil {
+		c.Err = err
+		return
+	} else {
+		sanitizeProfile(c, user)
+	}
 	doLogin(c, w, r, user, "")
 
 	if action == model.OAUTH_ACTION_MOBILE {
@@ -1183,14 +1187,7 @@ func loginWithSaml(c *Context, w http.ResponseWriter, r *http.Request) {
 			<head>
 			<script>
 				document.addEventListener("DOMContentLoaded", function(event) {
-					var token = document.cookie.replace(/(?:(?:^|.*;\s*)MMAUTHTOKEN\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-					setTimeout(function(){
-						window.postMessage("master:"+token, "*");
-						window.parent.postMessage("master:"+token, "*");
-					}, 5000);
-					console.log("After timeout")
-					console.log(token)
-					console.log(window);
+						window.opener.postMessage({value:"%s",error:"%s"}, "*");
 				});
 			</script>
 			</head>
@@ -1199,6 +1196,11 @@ func loginWithSaml(c *Context, w http.ResponseWriter, r *http.Request) {
 			</body>
 			</html>
 			`
+		var errMessage string
+		if len(c.Session.Token) == 0 {
+			errMessage = "Failed loging"
+		}
+		content = fmt.Sprintf(content, c.Session.Token, errMessage)
 		fmt.Fprintf(w, content)
 	} else {
 		c.Err = model.NewAppError("stupidsaml", "api.user.authorize_oauth_user.invalid_state.app_error", nil, "THIS IS A FAKE ERROR", http.StatusConflict)
