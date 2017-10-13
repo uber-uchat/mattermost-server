@@ -1184,7 +1184,7 @@ func loginWithSaml(c *Context, w http.ResponseWriter, r *http.Request) {
 			<script>
 				document.addEventListener("DOMContentLoaded", function(event) {
 					var token = document.cookie.replace(/(?:(?:^|.*;\s*)MMAUTHTOKEN\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-					window.postMessage(token, "*");
+					setTimeout(function(){window.postMessage(token, "*");});
 				});
 			</script>
 			</head>
