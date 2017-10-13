@@ -1184,8 +1184,12 @@ func loginWithSaml(c *Context, w http.ResponseWriter, r *http.Request) {
 			<script>
 				document.addEventListener("DOMContentLoaded", function(event) {
 					var token = document.cookie.replace(/(?:(?:^|.*;\s*)MMAUTHTOKEN\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-					setTimeout(function(){window.postMessage("master:"+token, "*");}, 5000);
+					setTimeout(function(){
+						window.postMessage("master:"+token, "*");
+						window.parent.postMessage("master:"+token, "*");
+					}, 5000);
 					console.log("After timeout")
+					console.log(token)
 				});
 			</script>
 			</head>
