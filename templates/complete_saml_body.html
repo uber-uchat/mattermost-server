@@ -1,0 +1,21 @@
+{{define "complete_saml_body"}}
+
+<html>
+	<head>
+		<script>
+			document.addEventListener("DOMContentLoaded", function(event) {
+				window.opener.postMessage({
+					value: {{.Token}},
+					error: {{.Error}}
+				}, "*"); // TODO: targetOrigin should accept specific domains
+                // For embedded use cases,
+                // Chrome extension: check complete_saml_extension_body
+			});
+		</script>
+	</head>
+	<body>
+		Login Successful
+	</body>
+</html>
+
+{{end}}

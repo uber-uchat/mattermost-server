@@ -16,6 +16,7 @@ import (
 	"github.com/mattermost/mattermost-server/mlog"
 	"github.com/mattermost/mattermost-server/model"
 	"github.com/mattermost/mattermost-server/store"
+	"html/template"
 )
 
 func (api *API) InitUser() {
@@ -1095,6 +1096,7 @@ func loginWithSaml(c *Context, w http.ResponseWriter, r *http.Request) {
 	}
 	action := r.URL.Query().Get("action")
 	redirectTo := r.URL.Query().Get("redirect_to")
+	extensionID := r.URL.Query().Get("extension_id")
 	relayProps := map[string]string{}
 	relayState := ""
 
@@ -1104,6 +1106,10 @@ func loginWithSaml(c *Context, w http.ResponseWriter, r *http.Request) {
 		if action == model.OAUTH_ACTION_EMAIL_TO_SSO {
 			relayProps["email"] = r.URL.Query().Get("email")
 		}
+	}
+
+	if len(extensionID) != 0 {
+		relayProps["extension_id"] = extensionID
 	}
 
 	if len(redirectTo) != 0 {
@@ -1200,9 +1206,52 @@ func completeSaml(c *Context, w http.ResponseWriter, r *http.Request) {
 
 		if action == model.OAUTH_ACTION_MOBILE {
 			ReturnStatusOK(w)
+		} else if action == model.OAUTH_ACTION_CLIENT {
+			returnTokenToClient(relayProps["extension_id"], c, w)
 		} else {
 			http.Redirect(w, r, app.GetProtocol(r)+"://"+r.Host, http.StatusFound)
 		}
+	}
+}
+
+func returnTokenToClient(extensionID string, c *Context, w http.ResponseWriter) {
+	var t *template.Template
+	var err error
+	if len(extensionID) != 0 {
+		t = template.New("complete_saml_extension_body")
+		t, err = t.ParseFiles("templates/complete_saml_extension_body.html")
+	} else {
+		t = template.New("complete_saml_body")
+		t, err = t.ParseFiles("templates/complete_saml_body.html")
+	}
+
+	if err != nil {
+		c.Err = model.NewAppError("completeSaml", "api.user.saml.app_error", nil, "err="+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	w.WriteHeader(http.StatusOK)
+
+	var errMessage string
+	if len(c.Session.Token) == 0 {
+		loginError := model.NewAppError("completeSaml", "api.user.saml.app_error", nil, "", http.StatusInternalServerError)
+		errMessage = loginError.Message
+	}
+
+	data := struct {
+		ExtensionID string
+		Token       string
+		Error       string
+	}{
+		extensionID,
+		c.Session.Token,
+		errMessage,
+	}
+
+	if err := t.Execute(w, data); err != nil {
+		c.Err = model.NewAppError("completeSaml", "api.user.saml.app_error", nil, "err="+err.Error(), http.StatusInternalServerError)
+		return
 	}
 }
 
