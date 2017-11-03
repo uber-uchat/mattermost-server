@@ -13,13 +13,13 @@ func TestTranslateAsHtml(t *testing.T) {
 
 	translateFunc := TfuncWithFallback("en")
 
-	expected := "To finish updating your email address for YOUR TEAM HERE, please click the link below to confirm this is the right address."
+	expected := "To finish updating your email address, please click the link below to confirm this is the right address."
 	if actual := TranslateAsHtml(translateFunc, "api.templates.email_change_verify_body.info",
 		map[string]interface{}{"TeamDisplayName": "YOUR TEAM HERE"}); actual != template.HTML(expected) {
 		t.Fatalf("Incorrectly translated template, got %v, expected %v", actual, expected)
 	}
 
-	expected = "To finish updating your email address for &lt;b&gt;YOUR TEAM HERE&lt;/b&gt;, please click the link below to confirm this is the right address."
+	expected = "To finish updating your email address, please click the link below to confirm this is the right address."
 	if actual := TranslateAsHtml(translateFunc, "api.templates.email_change_verify_body.info",
 		map[string]interface{}{"TeamDisplayName": "<b>YOUR TEAM HERE</b>"}); actual != template.HTML(expected) {
 		t.Fatalf("Incorrectly translated template, got %v, expected %v", actual, expected)
