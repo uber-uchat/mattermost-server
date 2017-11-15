@@ -936,6 +936,19 @@ func (c *Client) GetRecentlyActiveUsers(teamId string) (*Result, *AppError) {
 	}
 }
 
+func (c *Client) AdminUpdateUser(user *User) (*Result, *AppError) {
+	l4g.Info("AdminUpdateUser")
+	if r, err := c.DoApiPost("/admin/users/update", user.ToJson()); err != nil {
+		l4g.Info("error")
+		return nil, err
+	} else {
+		l4g.Info("response", r.Body)
+		defer closeBody(r)
+		return &Result{r.Header.Get(HEADER_REQUEST_ID),
+			r.Header.Get(HEADER_ETAG_SERVER), UserFromJson(r.Body)}, nil
+	}
+}
+
 func (c *Client) GetAllAudits() (*Result, *AppError) {
 	if r, err := c.DoApiGet("/admin/audits", "", ""); err != nil {
 		return nil, err

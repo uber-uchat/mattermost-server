@@ -518,7 +518,7 @@ func TestAdminResetMfa(t *testing.T) {
 }
 
 func TestAdminResetPassword(t *testing.T) {
-	th := Setup().InitSystemAdmin()
+	th := Setup().InitBasic().InitSystemAdmin()
 	defer th.TearDown()
 
 	Client := th.SystemAdminClient
@@ -584,6 +584,73 @@ func TestGetRecentlyActiveUsers(t *testing.T) {
 		t.Fatal(err)
 	} else if len(userMap.Data.(map[string]*model.User)) >= 2 {
 		t.Fatal("should have been at least 2")
+	}
+}
+
+func TestAdminUpdateUser(t *testing.T) {
+	th := Setup().InitSystemAdmin().InitBasic()
+	defer th.TearDown()
+
+	Client := th.SystemAdminClient
+
+	team := &model.Team{DisplayName: "Name", Name: "z-z-" + model.NewId() + "a", Email: "test@nowhere.com", Type: model.TEAM_OPEN}
+	team = Client.Must(Client.CreateTeam(team)).Data.(*model.Team)
+
+	Client.Logout()
+
+	user := &model.User{Email: strings.ToLower(model.NewId()) + "success+test@simulator.amazonses.com", Nickname: "Corey Hulen", Password: "passwd1", Roles: ""}
+	user = Client.Must(Client.CreateUser(user, "")).Data.(*model.User)
+
+	Client.Login(user.Email, "passwd1")
+
+	th.LinkUserToTeam(user, team)
+	store.Must(th.App.Srv.Store.User().VerifyEmail(user.Id))
+
+	if _, err := th.BasicClient.AdminUpdateUser(user); err == nil {
+		t.Fatal("Shouldn't have permissions")
+	}
+
+	if _, err := Client.AdminUpdateUser(nil); err == nil {
+		t.Fatal("Should have errored - user does not exist")
+	}
+
+	user.Password = ""
+
+	if _, err := Client.AdminUpdateUser(nil); err == nil {
+		t.Fatal("Should have errored - user password not valid")
+	}
+
+	user.Nickname = "Jim Jimmy"
+	user.Roles = model.ROLE_SYSTEM_ADMIN.Id
+	user.Password = "Password1"
+	user.LastPasswordUpdate = 123
+
+	if result, err := Client.AdminUpdateUser(user); err != nil {
+		t.Fatal(err)
+	} else {
+		if result.Data.(*model.User).Nickname != "Jim Jimmy" {
+			t.Fatal("Nickname did not update properly")
+		}
+		if result.Data.(*model.User).Roles != model.ROLE_SYSTEM_USER.Id {
+			t.Fatal("Roles should not have updated")
+		}
+		if result.Data.(*model.User).LastPasswordUpdate == 123 {
+			t.Fatal("LastPasswordUpdate should not have updated")
+		}
+	}
+
+	user2 := &model.User{Email: strings.ToLower(model.NewId()) + "success+test@simulator.amazonses.com", Nickname: "Corey Hulen", Password: "passwd1"}
+	user2 = Client.Must(Client.CreateUser(user2, "")).Data.(*model.User)
+	th.LinkUserToTeam(user2, team)
+	store.Must(th.App.Srv.Store.User().VerifyEmail(user2.Id))
+
+	Client.Login(user2.Email, "passwd1")
+	Client.SetTeamId(team.Id)
+
+	user.Nickname = "Tim Timmy"
+
+	if _, err := Client.AdminUpdateUser(user); err == nil {
+		t.Fatal("Should have errored")
 	}
 }
 
