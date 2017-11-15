@@ -303,6 +303,7 @@ func adminResetMfa(c *Context, w http.ResponseWriter, r *http.Request) {
 
 func adminResetPassword(c *Context, w http.ResponseWriter, r *http.Request) {
 	props := model.MapFromJson(r.Body)
+	l4g.Info("adminResetPassword props: ", props)
 
 	userId := props["user_id"]
 	if len(userId) != 26 {
@@ -426,7 +427,7 @@ func getRecentlyActiveUsers(c *Context, w http.ResponseWriter, r *http.Request) 
 
 func adminUpdateUser(c *Context, w http.ResponseWriter, r *http.Request) {
 	user := model.UserFromJson(r.Body)
-
+	l4g.Info("adminUpdateUser func")
 	if user == nil {
 		c.SetInvalidParam("updateUser", "user")
 		return

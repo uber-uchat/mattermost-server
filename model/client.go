@@ -159,6 +159,7 @@ func (c *Client) DoApiPost(url string, data string) (*http.Response, *AppError) 
 	rq, _ := http.NewRequest("POST", c.ApiUrl+url, strings.NewReader(data))
 	rq.Close = true
 
+	l4g.Info("auth token: ", c.AuthToken)
 	if len(c.AuthToken) > 0 {
 		rq.Header.Set(HEADER_AUTH, c.AuthType+" "+c.AuthToken)
 	}
@@ -937,7 +938,7 @@ func (c *Client) GetRecentlyActiveUsers(teamId string) (*Result, *AppError) {
 }
 
 func (c *Client) AdminUpdateUser(user *User) (*Result, *AppError) {
-	l4g.Info("AdminUpdateUser")
+	l4g.Info("AdminUpdateUser: ", user.ToJson())
 	if r, err := c.DoApiPost("/admin/users/update", user.ToJson()); err != nil {
 		l4g.Info("error")
 		return nil, err

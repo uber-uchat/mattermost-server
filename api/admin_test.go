@@ -10,6 +10,7 @@ import (
 
 	"github.com/mattermost/mattermost-server/model"
 	"github.com/mattermost/mattermost-server/store"
+	l4g "github.com/alecthomas/log4go"
 )
 
 func TestGetLogs(t *testing.T) {
@@ -593,8 +594,9 @@ func TestAdminUpdateUser(t *testing.T) {
 
 	Client := th.SystemAdminClient
 
-	team := &model.Team{DisplayName: "Name", Name: "z-z-" + model.NewId() + "a", Email: "test@nowhere.com", Type: model.TEAM_OPEN}
-	team = Client.Must(Client.CreateTeam(team)).Data.(*model.Team)
+	//team := &model.Team{DisplayName: "Name", Name: "z-z-" + model.NewId() + "a", Email: "test@nowhere.com", Type: model.TEAM_OPEN}
+	team := th.SystemAdminTeam
+	//team = Client.Must(Client.CreateTeam(team)).Data.(*model.Team)
 
 	Client.Logout()
 
@@ -616,7 +618,7 @@ func TestAdminUpdateUser(t *testing.T) {
 
 	user.Password = ""
 
-	if _, err := Client.AdminUpdateUser(nil); err == nil {
+	if _, err := Client.AdminUpdateUser(user); err == nil {
 		t.Fatal("Should have errored - user password not valid")
 	}
 
@@ -626,6 +628,7 @@ func TestAdminUpdateUser(t *testing.T) {
 	user.LastPasswordUpdate = 123
 
 	if result, err := Client.AdminUpdateUser(user); err != nil {
+		l4g.Info("AdminUpdateUser err", err);
 		t.Fatal(err)
 	} else {
 		if result.Data.(*model.User).Nickname != "Jim Jimmy" {

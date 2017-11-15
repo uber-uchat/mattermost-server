@@ -68,6 +68,7 @@ func (api *API) AppHandlerTrustRequester(h func(*Context, http.ResponseWriter, *
 }
 
 func (api *API) ApiAdminSystemRequired(h func(*Context, http.ResponseWriter, *http.Request)) http.Handler {
+	l4g.Info("middleware ApiAdminSystemRequired")
 	return &handler{api.App, h, true, true, true, false, false, false, true}
 }
 
