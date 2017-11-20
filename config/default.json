@@ -176,6 +176,7 @@
         "EnableSignUpWithEmail": true,
         "EnableSignInWithEmail": true,
         "EnableSignInWithUsername": true,
+        "EnableSignInWithEmailFromWebhook": false,
         "SendEmailNotifications": true,
         "UseChannelInEmailNotifications": false,
         "RequireEmailVerification": false,
