@@ -1089,6 +1089,7 @@ type EmailSettings struct {
 	EnableSignUpWithEmail             *bool
 	EnableSignInWithEmail             *bool
 	EnableSignInWithUsername          *bool
+	EnableSignInWithEmailFromWebhook  *bool
 	SendEmailNotifications            *bool
 	UseChannelInEmailNotifications    *bool
 	RequireEmailVerification          *bool
@@ -1131,6 +1132,10 @@ func (s *EmailSettings) SetDefaults() {
 
 	if s.SendEmailNotifications == nil {
 		s.SendEmailNotifications = NewBool(true)
+	}
+
+	if s.EnableSignInWithEmailFromWebhook == nil {
+		s.EnableSignInWithEmailFromWebhook = NewBool(false)
 	}
 
 	if s.UseChannelInEmailNotifications == nil {
