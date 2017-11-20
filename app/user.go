@@ -379,7 +379,7 @@ func (a *App) GetUserForLogin(loginId string, onlyLdap bool) (*model.User, *mode
 	if result := <-a.Srv.Store.User().GetForLogin(
 		loginId,
 		*a.Config().EmailSettings.EnableSignInWithUsername && !onlyLdap,
-		*a.Config().EmailSettings.EnableSignInWithEmail && !onlyLdap,
+		(*a.Config().EmailSettings.EnableSignInWithEmailFromWebhook || *a.Config().EmailSettings.EnableSignInWithEmail) && !onlyLdap,
 		ldapAvailable,
 	); result.Err != nil && result.Err.Id == "store.sql_user.get_for_login.multiple_users" {
 		// don't fall back to LDAP in this case since we already know there's an LDAP user, but that it shouldn't work
