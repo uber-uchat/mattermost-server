@@ -142,6 +142,7 @@
         "EnableSignUpWithEmail": true,
         "EnableSignInWithEmail": true,
         "EnableSignInWithUsername": true,
+        "EnableSignInWithEmailFromWebhook": false,
         "SendEmailNotifications": true,
         "RequireEmailVerification": false,
         "FeedbackName": "",
