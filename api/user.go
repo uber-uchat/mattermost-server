@@ -4,6 +4,7 @@
 package api
 
 import (
+	b64 "encoding/base64"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -1080,89 +1081,97 @@ func checkMfa(c *Context, w http.ResponseWriter, r *http.Request) {
 }
 
 func loginWithSaml(c *Context, w http.ResponseWriter, r *http.Request) {
-	// samlInterface := c.App.Saml
+	samlInterface := c.App.Saml
 
-	// if samlInterface == nil {
-	// 	c.Err = model.NewAppError("loginWithSaml", "api.user.saml.not_available.app_error", nil, "", http.StatusFound)
-	// 	return
-	// }
-
-	// teamId, err := c.App.GetTeamIdFromQuery(r.URL.Query())
-	// if err != nil {
-	// 	c.Err = err
-	// 	return
-	// }
-	action := r.URL.Query().Get("action")
-	username := r.URL.Query().Get("username")
-	if len(username) == 0 {
-		username = "dchristopher"
+	if samlInterface == nil {
+		c.Err = model.NewAppError("loginWithSaml", "api.user.saml.not_available.app_error", nil, "", http.StatusFound)
+		return
 	}
-	// redirectTo := r.URL.Query().Get("redirect_to")
-	// relayProps := map[string]string{}
-	// relayState := ""
 
-	// if len(action) != 0 {
-	// 	relayProps["team_id"] = teamId
-	// 	relayProps["action"] = action
-	// 	if action == model.OAUTH_ACTION_EMAIL_TO_SSO {
-	// 		relayProps["email"] = r.URL.Query().Get("email")
-	// 	}
-	// }
-
-	// if len(redirectTo) != 0 {
-	// 	relayProps["redirect_to"] = redirectTo
-	// }
-
-	// if len(relayProps) > 0 {
-	// 	relayState = b64.StdEncoding.EncodeToString([]byte(model.MapToJson(relayProps)))
-	// }
-
-	// if data, err := samlInterface.BuildRequest(relayState); err != nil {
-	// 	c.Err = err
-	// 	return
-	// } else {
-	// 	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
-	// 	http.Redirect(w, r, data.URL, http.StatusFound)
-	// }
-	user, err := c.App.GetUserByUsername(username)
+	teamId, err := c.App.GetTeamIdFromQuery(r.URL.Query())
 	if err != nil {
 		c.Err = err
 		return
-	} else {
-		sanitizeProfile(c, user)
 	}
-	doLogin(c, w, r, user, "")
+	action := r.URL.Query().Get("action")
+	redirectTo := r.URL.Query().Get("redirect_to")
+	relayProps := map[string]string{}
+	relayState := ""
 
-	if action == model.OAUTH_ACTION_MOBILE {
-		ReturnStatusOK(w)
-	} else if action == "client" {
-		w.Header().Set("Content-Type", "text/html")
-		w.WriteHeader(http.StatusOK)
-		content := `
-			<!DOCTYPE html>
-			<html>
-			<head>
-			<script>
-				document.addEventListener("DOMContentLoaded", function(event) {
-						window.opener.postMessage({value:"%s",error:"%s"}, "*");
-				});
-			</script>
-			</head>
-			<body>
-				Login Successful
-			</body>
-			</html>
-			`
-		var errMessage string
-		if len(c.Session.Token) == 0 {
-			errMessage = "Failed loging"
+	if len(action) != 0 {
+		relayProps["team_id"] = teamId
+		relayProps["action"] = action
+		if action == model.OAUTH_ACTION_EMAIL_TO_SSO {
+			relayProps["email"] = r.URL.Query().Get("email")
 		}
-		content = fmt.Sprintf(content, c.Session.Token, errMessage)
-		fmt.Fprintf(w, content)
-	} else {
-		c.Err = model.NewAppError("stupidsaml", "api.user.authorize_oauth_user.invalid_state.app_error", nil, "THIS IS A FAKE ERROR", http.StatusConflict)
-		http.Redirect(w, r, "https://google.com", http.StatusFound)
 	}
+
+	if len(redirectTo) != 0 {
+		relayProps["redirect_to"] = redirectTo
+	}
+
+	if len(relayProps) > 0 {
+		relayState = b64.StdEncoding.EncodeToString([]byte(model.MapToJson(relayProps)))
+	}
+
+	if data, err := samlInterface.BuildRequest(relayState); err != nil {
+		c.Err = err
+		return
+	} else {
+		w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
+		http.Redirect(w, r, data.URL, http.StatusFound)
+	}
+
+	// TODO: logic below is used for FAML
+	// username := r.URL.Query().Get("username")
+	// if len(username) == 0 {
+	// 	username = "dchristopher"
+	// }
+
+	// TODO: keep comment out for now, will be moved to completeSaml
+	// user, err := c.App.GetUserByUsername(username)
+	// if err != nil {
+	// 	c.Err = err
+	// 	return
+	// } else {
+	// 	sanitizeProfile(c, user)
+	// }
+	// doLogin(c, w, r, user, "")
+	//
+	// if action == model.OAUTH_ACTION_MOBILE {
+	// 	ReturnStatusOK(w)
+	// } else if action == "client" {
+	// 	t := template.New("complete_saml_body")
+	// 	t, err := t.ParseFiles("templates/complete_saml_body.html")
+	// 	if err != nil {
+	// 		c.Err = model.NewAppError("completeSaml", "api.user.saml.app_error", nil, "err="+err.Error(), http.StatusInternalServerError)
+	// 		return
+	// 	}
+	//
+	// 	w.Header().Set("Content-Type", "text/html")
+	// 	w.WriteHeader(http.StatusOK)
+	//
+	// 	var errMessage string
+	// 	if len(c.Session.Token) == 0 {
+	// 		errMessage = "Failed loging"
+	// 	}
+	//
+	// 	data := struct {
+	// 		Token string
+	// 		Error string
+	// 	}{
+	// 		c.Session.Token,
+	// 		errMessage,
+	// 	}
+	//
+	// 	if err := t.Execute(w, data); err != nil {
+	// 		c.Err = model.NewAppError("completeSaml", "api.user.saml.app_error", nil, "err="+err.Error(), http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// } else {
+	// 	c.Err = model.NewAppError("stupidsaml", "api.user.authorize_oauth_user.invalid_state.app_error", nil, "THIS IS A FAKE ERROR", http.StatusConflict)
+	// 	http.Redirect(w, r, "https://google.com", http.StatusFound)
+	// }
 }
 
 func completeSaml(c *Context, w http.ResponseWriter, r *http.Request) {
