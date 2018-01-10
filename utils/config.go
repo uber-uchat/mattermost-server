@@ -491,6 +491,7 @@ func getClientConfig(c *model.Config) map[string]string {
 	props["CloseUnusedDirectMessages"] = strconv.FormatBool(*c.ServiceSettings.CloseUnusedDirectMessages)
 	props["EnablePreviewFeatures"] = strconv.FormatBool(*c.ServiceSettings.EnablePreviewFeatures)
 	props["EnableTutorial"] = strconv.FormatBool(*c.ServiceSettings.EnableTutorial)
+	props["ExperimentalEnableDefaultChannelLeaveJoinMessages"] = strconv.FormatBool(*c.ServiceSettings.ExperimentalEnableDefaultChannelLeaveJoinMessages)
 
 	props["SendEmailNotifications"] = strconv.FormatBool(c.EmailSettings.SendEmailNotifications)
 	props["SendPushNotifications"] = strconv.FormatBool(*c.EmailSettings.SendPushNotifications)
