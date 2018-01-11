@@ -406,7 +406,7 @@ func UpgradeDatabaseToVersion49(sqlStore SqlStore) {
 		}
 		sqlStore.CreateColumnIfNotExists("Users", "Timezone", "varchar(256)", "varchar(256)", string(defaultTimezoneValue))
 		sqlStore.RemoveIndexIfExists("idx_channels_displayname", "Channels")
-		saveSchemaVersion(sqlStore, VERSION_4_9_0)
+		// saveSchemaVersion(sqlStore, VERSION_4_9_0)
 	}
 }
 
@@ -417,7 +417,7 @@ func UpgradeDatabaseToVersion410(sqlStore SqlStore) {
 		sqlStore.RemoveIndexIfExists("Name_2", "Emoji")
 		sqlStore.RemoveIndexIfExists("ClientId_2", "OAuthAccessData")
 
-		saveSchemaVersion(sqlStore, VERSION_4_10_0)
+		// saveSchemaVersion(sqlStore, VERSION_4_10_0)
 		sqlStore.GetMaster().Exec("UPDATE Users SET AuthData=LOWER(AuthData) WHERE AuthService = 'saml'")
 	}
 }
