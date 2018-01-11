@@ -405,6 +405,6 @@ func UpgradeDatabaseToVersion49(sqlStore SqlStore) {
 		}
 		sqlStore.CreateColumnIfNotExists("Users", "Timezone", "varchar(256)", "varchar(256)", string(defaultTimezoneValue))
 		sqlStore.RemoveIndexIfExists("idx_channels_displayname", "Channels")
-		saveSchemaVersion(sqlStore, VERSION_4_9_0)
+		// saveSchemaVersion(sqlStore, VERSION_4_9_0)
 	}
 }
