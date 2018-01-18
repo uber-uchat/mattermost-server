@@ -1025,6 +1025,7 @@ func login(c *Context, w http.ResponseWriter, r *http.Request) {
 
 	user.Sanitize(map[string]bool{})
 	w.Header().Set("Access-Control-Expose-Headers", "Token")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
 	w.Write([]byte(user.ToJson()))
 }
 
