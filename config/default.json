@@ -364,5 +364,443 @@
         "ClientDirectory": "./client/plugins",
         "Plugins": {},
         "PluginStates": {}
-    }
+    },
+    "FriendlyTimezones": [
+       {
+           "FriendlyName":"(GMT-11:00) Pago Pago",
+           "ProminentTimezone":"Pacific/Pago_Pago"
+       },
+       {
+           "FriendlyName":"(GMT-10:00) Hawaii Time",
+           "ProminentTimezone":"Pacific/Honolulu"
+       },
+       {
+           "FriendlyName":"(GMT-08:00) Pacific Time",
+           "ProminentTimezone":"America/Los_Angeles"
+       },
+       {
+           "FriendlyName":"(GMT-08:00) Pacific Time - Tijuana",
+           "ProminentTimezone":"America/Tijuana"
+       },
+       {
+           "FriendlyName":"(GMT-07:00) Mountain Time",
+           "ProminentTimezone":"America/Denver"
+       },
+       {
+           "FriendlyName":"(GMT-07:00) Mountain Time - Arizona",
+           "ProminentTimezone":"America/Phoenix"
+       },
+       {
+           "FriendlyName":"(GMT-07:00) Mountain Time - Chihuahua, Mazatlan",
+           "ProminentTimezone":"America/Mazatlan"
+       },
+       {
+           "FriendlyName":"(GMT-06:00) Central Time",
+           "ProminentTimezone":"America/Chicago"
+       },
+       {
+           "FriendlyName":"(GMT-06:00) Central Time - Mexico City",
+           "ProminentTimezone":"America/Mexico_City"
+       },
+       {
+           "FriendlyName":"(GMT-06:00) Central Time - Regina",
+           "ProminentTimezone":"America/Regina"
+       },
+       {
+           "FriendlyName":"(GMT-06:00) Guatemala",
+           "ProminentTimezone":"America/Guatemala"
+       },
+       {
+           "FriendlyName":"(GMT-05:00) Bogota",
+           "ProminentTimezone":"America/Bogota"
+       },
+       {
+           "FriendlyName":"(GMT-05:00) Eastern Time",
+           "ProminentTimezone":"America/New_York"
+       },
+       {
+           "FriendlyName":"(GMT-05:00) Lima",
+           "ProminentTimezone":"America/Lima"
+       },
+       {
+           "FriendlyName":"(GMT-04:30) Caracas",
+           "ProminentTimezone":"America/Caracas"
+       },
+       {
+           "FriendlyName":"(GMT-04:00) Atlantic Time - Halifax",
+           "ProminentTimezone":"America/Halifax"
+       },
+       {
+           "FriendlyName":"(GMT-04:00) Guyana",
+           "ProminentTimezone":"America/Guyana"
+       },
+       {
+           "FriendlyName":"(GMT-04:00) La Paz",
+           "ProminentTimezone":"America/La_Paz"
+       },
+       {
+           "FriendlyName":"(GMT-03:00) Buenos Aires",
+           "ProminentTimezone":"America/Argentina/Buenos_Aires"
+       },
+       {
+           "FriendlyName":"(GMT-03:00) Godthab",
+           "ProminentTimezone":"America/Godthab"
+       },
+       {
+           "FriendlyName":"(GMT-03:00) Montevideo",
+           "ProminentTimezone":"America/Montevideo"
+       },
+       {
+           "FriendlyName":"(GMT-03:30) Newfoundland Time - St. Johns",
+           "ProminentTimezone":"America/St_Johns"
+       },
+       {
+           "FriendlyName":"(GMT-03:00) Santiago",
+           "ProminentTimezone":"America/Santiago"
+       },
+       {
+           "FriendlyName":"(GMT-02:00) Sao Paulo",
+           "ProminentTimezone":"America/Sao_Paulo"
+       },
+       {
+           "FriendlyName":"(GMT-02:00) South Georgia",
+           "ProminentTimezone":"Atlantic/South_Georgia"
+       },
+       {
+           "FriendlyName":"(GMT-01:00) Azores",
+           "ProminentTimezone":"Atlantic/Azores"
+       },
+       {
+           "FriendlyName":"(GMT-01:00) Cape Verde",
+           "ProminentTimezone":"Atlantic/Cape_Verde"
+       },
+       {
+           "FriendlyName":"(GMT+00:00) Casablanca",
+           "ProminentTimezone":"Africa/Casablanca"
+       },
+       {
+           "FriendlyName":"(GMT+00:00) Dublin",
+           "ProminentTimezone":"Europe/Dublin"
+       },
+       {
+           "FriendlyName":"(GMT+00:00) Lisbon",
+           "ProminentTimezone":"Europe/Lisbon"
+       },
+       {
+           "FriendlyName":"(GMT+00:00) London",
+           "ProminentTimezone":"Europe/London"
+       },
+       {
+           "FriendlyName":"(GMT+00:00) Monrovia",
+           "ProminentTimezone":"Africa/Monrovia"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Algiers",
+           "ProminentTimezone":"Africa/Algiers"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Amsterdam",
+           "ProminentTimezone":"Europe/Amsterdam"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Berlin",
+           "ProminentTimezone":"Europe/Berlin"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Brussels",
+           "ProminentTimezone":"Europe/Brussels"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Budapest",
+           "ProminentTimezone":"Europe/Budapest"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Central European Time - Belgrade",
+           "ProminentTimezone":"Europe/Belgrade"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Central European Time - Prague",
+           "ProminentTimezone":"Europe/Prague"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Copenhagen",
+           "ProminentTimezone":"Europe/Copenhagen"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Madrid",
+           "ProminentTimezone":"Europe/Madrid"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Paris",
+           "ProminentTimezone":"Europe/Paris"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Rome",
+           "ProminentTimezone":"Europe/Rome"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Stockholm",
+           "ProminentTimezone":"Europe/Stockholm"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Vienna",
+           "ProminentTimezone":"Europe/Vienna"
+       },
+       {
+           "FriendlyName":"(GMT+01:00) Warsaw",
+           "ProminentTimezone":"Europe/Warsaw"
+       },
+       {
+           "FriendlyName":"(GMT+02:00) Athens",
+           "ProminentTimezone":"Europe/Athens"
+       },
+       {
+           "FriendlyName":"(GMT+02:00) Bucharest",
+           "ProminentTimezone":"Europe/Bucharest"
+       },
+       {
+           "FriendlyName":"(GMT+02:00) Cairo",
+           "ProminentTimezone":"Africa/Cairo"
+       },
+       {
+           "FriendlyName":"(GMT+02:00) Jerusalem",
+           "ProminentTimezone":"Asia/Jerusalem"
+       },
+       {
+           "FriendlyName":"(GMT+02:00) Johannesburg",
+           "ProminentTimezone":"Africa/Johannesburg"
+       },
+       {
+           "FriendlyName":"(GMT+02:00) Helsinki",
+           "ProminentTimezone":"Europe/Helsinki"
+       },
+       {
+           "FriendlyName":"(GMT+02:00) Kiev",
+           "ProminentTimezone":"Europe/Kiev"
+       },
+       {
+           "FriendlyName":"(GMT+02:00) Moscow-01 - Kaliningrad",
+           "ProminentTimezone":"Europe/Kaliningrad"
+       },
+       {
+           "FriendlyName":"(GMT+02:00) Riga",
+           "ProminentTimezone":"Europe/Riga"
+       },
+       {
+           "FriendlyName":"(GMT+02:00) Sofia",
+           "ProminentTimezone":"Europe/Sofia"
+       },
+       {
+           "FriendlyName":"(GMT+02:00) Tallinn",
+           "ProminentTimezone":"Europe/Tallinn"
+       },
+       {
+           "FriendlyName":"(GMT+02:00) Vilnius",
+           "ProminentTimezone":"Europe/Vilnius"
+       },
+       {
+           "FriendlyName":"(GMT+03:00) Istanbul",
+           "ProminentTimezone":"Europe/Istanbul"
+       },
+       {
+           "FriendlyName":"(GMT+03:00) Baghdad",
+           "ProminentTimezone":"Asia/Baghdad"
+       },
+       {
+           "FriendlyName":"(GMT+03:00) Nairobi",
+           "ProminentTimezone":"Africa/Nairobi"
+       },
+       {
+           "FriendlyName":"(GMT+03:00) Minsk",
+           "ProminentTimezone":"Europe/Minsk"
+       },
+       {
+           "FriendlyName":"(GMT+03:00) Riyadh",
+           "ProminentTimezone":"Asia/Riyadh"
+       },
+       {
+           "FriendlyName":"(GMT+03:00) Moscow+00 - Moscow",
+           "ProminentTimezone":"Europe/Moscow"
+       },
+       {
+           "FriendlyName":"(GMT+03:30) Tehran",
+           "ProminentTimezone":"Asia/Tehran"
+       },
+       {
+           "FriendlyName":"(GMT+04:00) Baku",
+           "ProminentTimezone":"Asia/Baku"
+       },
+       {
+           "FriendlyName":"(GMT+04:00) Moscow+01 - Samara",
+           "ProminentTimezone":"Europe/Samara"
+       },
+       {
+           "FriendlyName":"(GMT+04:00) Tbilisi",
+           "ProminentTimezone":"Asia/Tbilisi"
+       },
+       {
+           "FriendlyName":"(GMT+04:00) Yerevan",
+           "ProminentTimezone":"Asia/Yerevan"
+       },
+       {
+           "FriendlyName":"(GMT+04:30) Kabul",
+           "ProminentTimezone":"Asia/Kabul"
+       },
+       {
+           "FriendlyName":"(GMT+05:00) Karachi",
+           "ProminentTimezone":"Asia/Karachi"
+       },
+       {
+           "FriendlyName":"(GMT+05:00) Moscow+02 - Yekaterinburg",
+           "ProminentTimezone":"Asia/Yekaterinburg"
+       },
+       {
+           "FriendlyName":"(GMT+05:00) Tashkent",
+           "ProminentTimezone":"Asia/Tashkent"
+       },
+       {
+           "FriendlyName":"(GMT+05:30) Colombo",
+           "ProminentTimezone":"Asia/Colombo"
+       },
+       {
+           "FriendlyName":"(GMT+06:00) Almaty",
+           "ProminentTimezone":"Asia/Almaty"
+       },
+       {
+           "FriendlyName":"(GMT+06:00) Dhaka",
+           "ProminentTimezone":"Asia/Dhaka"
+       },
+       {
+           "FriendlyName":"(GMT+06:30) Rangoon",
+           "ProminentTimezone":"Asia/Rangoon"
+       },
+       {
+           "FriendlyName":"(GMT+07:00) Bangkok",
+           "ProminentTimezone":"Asia/Bangkok"
+       },
+       {
+           "FriendlyName":"(GMT+07:00) Jakarta",
+           "ProminentTimezone":"Asia/Jakarta"
+       },
+       {
+           "FriendlyName":"(GMT+07:00) Moscow+04 - Krasnoyarsk",
+           "ProminentTimezone":"Asia/Krasnoyarsk"
+       },
+       {
+           "FriendlyName":"(GMT+08:00) China Time - Beijing",
+           "ProminentTimezone":"Asia/Shanghai"
+       },
+       {
+           "FriendlyName":"(GMT+08:00) Hong Kong",
+           "ProminentTimezone":"Asia/Hong_Kong"
+       },
+       {
+           "FriendlyName":"(GMT+08:00) Kuala Lumpur",
+           "ProminentTimezone":"Asia/Kuala_Lumpur"
+       },
+       {
+           "FriendlyName":"(GMT+08:00) Moscow+05 - Irkutsk",
+           "ProminentTimezone":"Asia/Irkutsk"
+       },
+       {
+           "FriendlyName":"(GMT+08:00) Singapore",
+           "ProminentTimezone":"Asia/Singapore"
+       },
+       {
+           "FriendlyName":"(GMT+08:00) Taipei",
+           "ProminentTimezone":"Asia/Taipei"
+       },
+       {
+           "FriendlyName":"(GMT+08:00) Ulaanbaatar",
+           "ProminentTimezone":"Asia/Ulaanbaatar"
+       },
+       {
+           "FriendlyName":"(GMT+08:00) Western Time - Perth",
+           "ProminentTimezone":"Australia/Perth"
+       },
+       {
+           "FriendlyName":"(GMT+09:00) Moscow+06 - Yakutsk",
+           "ProminentTimezone":"Asia/Yakutsk"
+       },
+       {
+           "FriendlyName":"(GMT+09:00) Seoul",
+           "ProminentTimezone":"Asia/Seoul"
+       },
+       {
+           "FriendlyName":"(GMT+09:00) Tokyo",
+           "ProminentTimezone":"Asia/Tokyo"
+       },
+       {
+           "FriendlyName":"(GMT+09:30) Central Time - Darwin",
+           "ProminentTimezone":"Australia/Darwin"
+       },
+       {
+           "FriendlyName":"(GMT+10:00) Eastern Time - Brisbane",
+           "ProminentTimezone":"Australia/Brisbane"
+       },
+       {
+           "FriendlyName":"(GMT+10:00) Guam",
+           "ProminentTimezone":"Pacific/Guam"
+       },
+       {
+           "FriendlyName":"(GMT+10:00) Moscow+07 - Magadan",
+           "ProminentTimezone":"Asia/Magadan"
+       },
+       {
+           "FriendlyName":"(GMT+10:00) Moscow+07 - Yuzhno-Sakhalinsk",
+           "ProminentTimezone":"Asia/Vladivostok"
+       },
+       {
+           "FriendlyName":"(GMT+10:00) Port Moresby",
+           "ProminentTimezone":"Pacific/Port_Moresby"
+       },
+       {
+           "FriendlyName":"(GMT+10:30) Central Time - Adelaide",
+           "ProminentTimezone":"Australia/Adelaide"
+       },
+       {
+           "FriendlyName":"(GMT+11:00) Eastern Time - Hobart",
+           "ProminentTimezone":"Australia/Hobart"
+       },
+       {
+           "FriendlyName":"(GMT+11:00) Eastern Time - Melbourne, Sydney",
+           "ProminentTimezone":"Australia/Sydney"
+       },
+       {
+           "FriendlyName":"(GMT+11:00) Guadalcanal",
+           "ProminentTimezone":"Pacific/Guadalcanal"
+       },
+       {
+           "FriendlyName":"(GMT+11:00) Noumea",
+           "ProminentTimezone":"Pacific/Noumea"
+       },
+       {
+           "FriendlyName":"(GMT+12:00) Majuro",
+           "ProminentTimezone":"Pacific/Majuro"
+       },
+       {
+           "FriendlyName":"(GMT+12:00) Moscow+09 - Petropavlovsk-Kamchatskiy",
+           "ProminentTimezone":"Asia/Kamchatka"
+       },
+       {
+           "FriendlyName":"(GMT+13:00) Auckland",
+           "ProminentTimezone":"Pacific/Auckland"
+       },
+       {
+           "FriendlyName":"(GMT+13:00) Fakaofo",
+           "ProminentTimezone":"Pacific/Fakaofo"
+       },
+       {
+           "FriendlyName":"(GMT+13:00) Fiji",
+           "ProminentTimezone":"Pacific/Fiji"
+       },
+       {
+           "FriendlyName":"(GMT+13:00) Tongatapu",
+           "ProminentTimezone":"Pacific/Tongatapu"
+       },
+       {
+           "FriendlyName":"(GMT+14:00) Apia",
+           "ProminentTimezone":"Pacific/Apia"
+       }
+   ]
 }

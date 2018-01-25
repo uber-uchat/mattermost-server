@@ -1617,6 +1617,13 @@ func (s *MessageExportSettings) SetDefaults() {
 	}
 }
 
+type Timezone struct {
+	FriendlyName      string
+	ProminentTimezone string
+}
+
+type FriendlyTimezones []Timezone
+
 type ConfigFunc func() *Config
 
 type Config struct {
@@ -1650,6 +1657,7 @@ type Config struct {
 	MessageExportSettings MessageExportSettings
 	JobSettings           JobSettings
 	PluginSettings        PluginSettings
+	FriendlyTimezones     FriendlyTimezones
 }
 
 func (o *Config) Clone() *Config {
