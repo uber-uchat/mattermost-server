@@ -924,6 +924,16 @@ func (s *ThemeSettings) SetDefaults() {
 	}
 }
 
+type DisplaySettings struct {
+	EnableTimezoneSelection *bool
+}
+
+func (s *DisplaySettings) SetDefaults() {
+	if s.EnableTimezoneSelection == nil {
+		s.EnableTimezoneSelection = NewBool(false)
+	}
+}
+
 type TeamSettings struct {
 	SiteName                            string
 	MaxUsersPerTeam                     *int
@@ -1623,6 +1633,8 @@ func (s *MessageExportSettings) SetDefaults() {
 	}
 }
 
+type SupportedTimezones []string
+
 type ConfigFunc func() *Config
 
 type Config struct {
@@ -1639,6 +1651,7 @@ type Config struct {
 	SupportSettings       SupportSettings
 	AnnouncementSettings  AnnouncementSettings
 	ThemeSettings         ThemeSettings
+	DisplaySettings       DisplaySettings
 	GitLabSettings        SSOSettings
 	GoogleSettings        SSOSettings
 	Office365Settings     SSOSettings
@@ -1656,6 +1669,7 @@ type Config struct {
 	MessageExportSettings MessageExportSettings
 	JobSettings           JobSettings
 	PluginSettings        PluginSettings
+	SupportedTimezones    SupportedTimezones
 }
 
 func (o *Config) Clone() *Config {
@@ -1721,6 +1735,7 @@ func (o *Config) SetDefaults() {
 	o.SupportSettings.SetDefaults()
 	o.AnnouncementSettings.SetDefaults()
 	o.ThemeSettings.SetDefaults()
+	o.DisplaySettings.SetDefaults()
 	o.ClusterSettings.SetDefaults()
 	o.PluginSettings.SetDefaults()
 	o.AnalyticsSettings.SetDefaults()

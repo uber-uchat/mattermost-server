@@ -243,14 +243,14 @@ func getClientConfig(c *Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respCfg := map[string]string{}
+	respCfg := make(map[string]interface{})
 	for k, v := range utils.ClientCfg {
 		respCfg[k] = v
 	}
 
 	respCfg["NoAccounts"] = strconv.FormatBool(c.App.IsFirstUserAccount())
 
-	w.Write([]byte(model.MapToJson(respCfg)))
+	w.Write([]byte(model.StringInterfaceToJson(respCfg)))
 }
 
 func getClientLicense(c *Context, w http.ResponseWriter, r *http.Request) {

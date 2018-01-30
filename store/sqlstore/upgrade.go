@@ -4,6 +4,7 @@
 package sqlstore
 
 import (
+	"encoding/json"
 	"os"
 	"strings"
 	"time"
@@ -62,6 +63,7 @@ func UpgradeDatabase(sqlStore SqlStore) {
 	UpgradeDatabaseToVersion44(sqlStore)
 	UpgradeDatabaseToVersion45(sqlStore)
 	UpgradeDatabaseToVersion46(sqlStore)
+	UpgradeDatabaseToVersion47(sqlStore)
 
 	// If the SchemaVersion is empty this this is the first time it has ran
 	// so lets set it to the current version.
@@ -329,6 +331,7 @@ func UpgradeDatabaseToVersion46(sqlStore SqlStore) {
 	if shouldPerformUpgrade(sqlStore, VERSION_4_5_0, VERSION_4_6_0) {
 		sqlStore.CreateColumnIfNotExists("IncomingWebhooks", "Username", "varchar(64)", "varchar(64)", "")
 		sqlStore.CreateColumnIfNotExists("IncomingWebhooks", "IconURL", "varchar(1024)", "varchar(1024)", "")
+
 		saveSchemaVersion(sqlStore, VERSION_4_6_0)
 	}
 }
@@ -337,4 +340,20 @@ func UpgradeDatabaseToVersion45(sqlStore SqlStore) {
 	if shouldPerformUpgrade(sqlStore, VERSION_4_4_0, VERSION_4_5_0) {
 		saveSchemaVersion(sqlStore, VERSION_4_5_0)
 	}
+}
+
+func UpgradeDatabaseToVersion47(sqlStore SqlStore) {
+	//if shouldPerformUpgrade(sqlStore, VERSION_4_6_0, VERSION_4_7_0) {
+	defaultTimezone := make(map[string]string)
+	defaultTimezone["useAutomaticTimezone"] = "true"
+	defaultTimezone["automaticTimezone"] = ""
+	defaultTimezone["manualTimezone"] = ""
+
+	defaultTimezoneValue, err := json.Marshal(defaultTimezone)
+	if err != nil {
+		l4g.Critical(err)
+	}
+	sqlStore.CreateColumnIfNotExists("Users", "Timezone", "varchar(150)", "varchar(150)", string(defaultTimezoneValue))
+	//saveSchemaVersion(sqlStore, VERSION_4_7_0)
+	//}
 }
