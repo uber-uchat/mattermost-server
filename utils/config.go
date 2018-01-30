@@ -42,7 +42,7 @@ var CfgHash = ""
 var ClientCfgHash = ""
 var CfgFileName string = ""
 var CfgDisableConfigWatch = false
-var ClientCfg map[string]string = map[string]string{}
+var ClientCfg map[string]interface{}
 var originalDisableDebugLvl l4g.Level = l4g.DEBUG
 var siteURL = ""
 
@@ -437,8 +437,10 @@ func RegenerateClientConfig() {
 	ClientCfg = getClientConfig(Cfg)
 }
 
-func getClientConfig(c *model.Config) map[string]string {
-	props := make(map[string]string)
+func getClientConfig(c *model.Config) map[string]interface{} {
+	props := make(map[string]interface{})
+
+	l4g.Info("Cfg", Cfg)
 
 	props["Version"] = model.CurrentVersion
 	props["BuildNumber"] = model.BuildNumber
@@ -537,7 +539,7 @@ func getClientConfig(c *model.Config) map[string]string {
 	props["AppDownloadLink"] = *c.NativeAppSettings.AppDownloadLink
 	props["AndroidAppDownloadLink"] = *c.NativeAppSettings.AndroidAppDownloadLink
 	props["IosAppDownloadLink"] = *c.NativeAppSettings.IosAppDownloadLink
-	props["IosAppUrlScheme"] = *c.NativeAppSettings.IosAppUrlScheme
+	//props["IosAppUrlScheme"] = *c.NativeAppSettings.IosAppUrlScheme
 
 	props["EnableWebrtc"] = strconv.FormatBool(*c.WebrtcSettings.Enable)
 
@@ -551,6 +553,8 @@ func getClientConfig(c *model.Config) map[string]string {
 	props["DiagnosticsEnabled"] = strconv.FormatBool(*c.LogSettings.EnableDiagnostics)
 
 	props["PluginsEnabled"] = strconv.FormatBool(*c.PluginSettings.Enable)
+	props["EnableTimezoneSelection"] = strconv.FormatBool(*c.DisplaySettings.EnableTimezoneSelection)
+	props["SupportedTimezones"] = c.SupportedTimezones
 
 	if IsLicensed() {
 		License := License()
@@ -640,6 +644,8 @@ func getClientConfig(c *model.Config) map[string]string {
 			props["DataRetentionFileRetentionDays"] = strconv.FormatInt(int64(*c.DataRetentionSettings.FileRetentionDays), 10)
 		}
 	}
+
+	l4g.Info("props", props)
 
 	return props
 }
