@@ -367,5 +367,8 @@
         "ClientDirectory": "./client/plugins",
         "Plugins": {},
         "PluginStates": {}
-    }
+    },
+    "BlacklistTimezones": [
+        "+VERSION"
+    ]
 }

@@ -251,6 +251,13 @@ func ReadConfig(r io.Reader, allowEnvironmentOverrides bool) (*model.Config, err
 		config.PluginSettings = model.PluginSettings{}
 		unmarshalErr = v.UnmarshalKey("pluginsettings", &config.PluginSettings)
 	}
+
+	timezones, timezoneErr := LoadTimezones(config.BlacklistTimezones)
+	if timezoneErr != nil {
+		panic(timezoneErr)
+	}
+	config.FriendlyTimezones = model.FriendlyTimezones(timezones)
+
 	return &config, unmarshalErr
 }
 
@@ -342,8 +349,50 @@ func LoadConfig(fileName string) (config *model.Config, configPath string, appEr
 	return config, configPath, nil
 }
 
-func GenerateClientConfig(c *model.Config, diagnosticId string) map[string]string {
-	props := make(map[string]string)
+func LoadTimezones(blacklistTimezones model.BlacklistTimezones) ([]string, error) {
+	zoneDir := "/usr/share/zoneinfo/"
+
+	timezones, _ := ReadTimezones(zoneDir, blacklistTimezones)
+
+	return timezones, nil
+}
+
+func ReadTimezones(zoneDir string, blacklistTimezones model.BlacklistTimezones) ([]string, error) {
+	var timezones []string
+
+	err := filepath.Walk(zoneDir, func(path string, f os.FileInfo, err error) error {
+		if f.Name() != strings.ToUpper(f.Name()[:1])+f.Name()[1:] {
+			return nil
+		}
+		if f.IsDir() {
+			return nil
+		}
+
+		timezone := strings.Replace(path, zoneDir, "", 1)
+		if isBlackListTimezone(timezone, blacklistTimezones) {
+			return nil
+		}
+
+		timezones = append(timezones, timezone)
+
+		return nil
+	})
+
+	return timezones, err
+}
+
+func isBlackListTimezone(timezone string, blacklistTimezones model.BlacklistTimezones) bool {
+	for _, blacklistTimezone := range blacklistTimezones {
+		if timezone == blacklistTimezone {
+			return true
+		}
+	}
+
+	return false
+}
+
+func GenerateClientConfig(c *model.Config, diagnosticId string) map[string]interface{} {
+	props := make(map[string]interface{})
 
 	props["Version"] = model.CurrentVersion
 	props["BuildNumber"] = model.BuildNumber
@@ -455,6 +504,7 @@ func GenerateClientConfig(c *model.Config, diagnosticId string) map[string]strin
 	props["DiagnosticsEnabled"] = strconv.FormatBool(*c.LogSettings.EnableDiagnostics)
 
 	props["PluginsEnabled"] = strconv.FormatBool(*c.PluginSettings.Enable)
+	props["FriendlyTimezones"] = c.FriendlyTimezones
 
 	if IsLicensed() {
 		License := License()
