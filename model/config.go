@@ -1681,6 +1681,16 @@ func (s *MessageExportSettings) SetDefaults() {
 	}
 }
 
+type TimezoneSettings struct {
+	SupportedTimezonesPath *string
+}
+
+func (s *TimezoneSettings) SetDefaults() {
+	if s.SupportedTimezonesPath == nil {
+		s.SupportedTimezonesPath = NewString("timezones.json")
+	}
+}
+
 type ConfigFunc func() *Config
 
 type Config struct {
@@ -1714,6 +1724,7 @@ type Config struct {
 	MessageExportSettings MessageExportSettings
 	JobSettings           JobSettings
 	PluginSettings        PluginSettings
+	TimezoneSettings      TimezoneSettings
 }
 
 func (o *Config) Clone() *Config {
@@ -1783,6 +1794,7 @@ func (o *Config) SetDefaults() {
 	o.JobSettings.SetDefaults()
 	o.WebrtcSettings.SetDefaults()
 	o.MessageExportSettings.SetDefaults()
+	o.TimezoneSettings.SetDefaults()
 }
 
 func (o *Config) IsValid() *AppError {

@@ -466,3 +466,15 @@ func TestGetAnalyticsOld(t *testing.T) {
 	_, resp = Client.GetAnalyticsOld("", th.BasicTeam.Id)
 	CheckUnauthorizedStatus(t, resp)
 }
+
+func TestSupportedTimezones(t *testing.T) {
+	th := Setup().InitBasic()
+	defer th.TearDown()
+	Client := th.Client
+
+	supportedTimezonesFromConfig := th.App.Timezones()
+	supportedTimezones, resp := Client.GetSupportedTimezone()
+
+	CheckNoError(t, resp)
+	assert.Equal(t, supportedTimezonesFromConfig, supportedTimezones)
+}
