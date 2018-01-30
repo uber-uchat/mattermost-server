@@ -1637,9 +1637,7 @@ func (s *MessageExportSettings) SetDefaults() {
 	}
 }
 
-type BlacklistTimezones []string
-
-type FriendlyTimezones []string
+type SupportedTimezones []string
 
 type ConfigFunc func() *Config
 
@@ -1674,8 +1672,7 @@ type Config struct {
 	MessageExportSettings MessageExportSettings
 	JobSettings           JobSettings
 	PluginSettings        PluginSettings
-	BlacklistTimezones    BlacklistTimezones
-	FriendlyTimezones     FriendlyTimezones
+	SupportedTimezones    SupportedTimezones
 }
 
 func (o *Config) Clone() *Config {
