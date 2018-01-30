@@ -74,7 +74,7 @@ func (a *App) ConfigFileName() string {
 	return a.configFile
 }
 
-func (a *App) ClientConfig() map[string]string {
+func (a *App) ClientConfig() map[string]interface{} {
 	return a.clientConfig
 }
 

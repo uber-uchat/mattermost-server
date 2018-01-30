@@ -4,6 +4,7 @@
 package sqlstore
 
 import (
+	"encoding/json"
 	"os"
 	"strings"
 	"time"
@@ -345,6 +346,17 @@ func UpgradeDatabaseToVersion46(sqlStore SqlStore) {
 func UpgradeDatabaseToVersion47(sqlStore SqlStore) {
 	if shouldPerformUpgrade(sqlStore, VERSION_4_6_0, VERSION_4_7_0) {
 		sqlStore.AlterColumnTypeIfExists("Users", "Position", "varchar(128)", "varchar(128)")
+
+		defaultTimezone := make(map[string]string)
+		defaultTimezone["useAutomaticTimezone"] = "true"
+		defaultTimezone["automaticTimezone"] = ""
+		defaultTimezone["manualTimezone"] = ""
+
+		defaultTimezoneValue, err := json.Marshal(defaultTimezone)
+		if err != nil {
+			l4g.Critical(err)
+		}
+		sqlStore.CreateColumnIfNotExists("Users", "Timezone", "varchar(150)", "varchar(150)", string(defaultTimezoneValue))
 		saveSchemaVersion(sqlStore, VERSION_4_7_0)
 	}
 }

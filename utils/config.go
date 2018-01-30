@@ -342,8 +342,8 @@ func LoadConfig(fileName string) (config *model.Config, configPath string, appEr
 	return config, configPath, nil
 }
 
-func GenerateClientConfig(c *model.Config, diagnosticId string) map[string]string {
-	props := make(map[string]string)
+func GenerateClientConfig(c *model.Config, diagnosticId string) map[string]interface{} {
+	props := make(map[string]interface{})
 
 	props["Version"] = model.CurrentVersion
 	props["BuildNumber"] = model.BuildNumber
@@ -455,6 +455,8 @@ func GenerateClientConfig(c *model.Config, diagnosticId string) map[string]strin
 	props["DiagnosticsEnabled"] = strconv.FormatBool(*c.LogSettings.EnableDiagnostics)
 
 	props["PluginsEnabled"] = strconv.FormatBool(*c.PluginSettings.Enable)
+	props["EnableTimezoneSelection"] = strconv.FormatBool(*c.DisplaySettings.EnableTimezoneSelection)
+	props["SupportedTimezones"] = c.SupportedTimezones
 
 	if IsLicensed() {
 		License := License()
