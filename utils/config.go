@@ -440,8 +440,6 @@ func RegenerateClientConfig() {
 func getClientConfig(c *model.Config) map[string]interface{} {
 	props := make(map[string]interface{})
 
-	l4g.Info("Cfg", Cfg)
-
 	props["Version"] = model.CurrentVersion
 	props["BuildNumber"] = model.BuildNumber
 	props["BuildDate"] = model.BuildDate
@@ -539,7 +537,7 @@ func getClientConfig(c *model.Config) map[string]interface{} {
 	props["AppDownloadLink"] = *c.NativeAppSettings.AppDownloadLink
 	props["AndroidAppDownloadLink"] = *c.NativeAppSettings.AndroidAppDownloadLink
 	props["IosAppDownloadLink"] = *c.NativeAppSettings.IosAppDownloadLink
-	//props["IosAppUrlScheme"] = *c.NativeAppSettings.IosAppUrlScheme
+	props["IosAppUrlScheme"] = *c.NativeAppSettings.IosAppUrlScheme
 
 	props["EnableWebrtc"] = strconv.FormatBool(*c.WebrtcSettings.Enable)
 
@@ -644,8 +642,6 @@ func getClientConfig(c *model.Config) map[string]interface{} {
 			props["DataRetentionFileRetentionDays"] = strconv.FormatInt(int64(*c.DataRetentionSettings.FileRetentionDays), 10)
 		}
 	}
-
-	l4g.Info("props", props)
 
 	return props
 }
