@@ -243,7 +243,7 @@ func getClientConfig(c *Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respCfg := map[string]string
+	respCfg := map[string]string{}
 	for k, v := range utils.ClientCfg {
 		respCfg[k] = v
 	}
