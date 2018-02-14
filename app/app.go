@@ -64,7 +64,6 @@ type App struct {
 
 	pluginCommands     []*PluginCommand
 	pluginCommandsLock sync.RWMutex
-	clientConfig       map[string]interface{}
 }
 
 var appCount = 0
@@ -84,7 +83,6 @@ func New(options ...Option) *App {
 		},
 		sessionCache: utils.NewLru(model.SESSION_CACHE_SIZE),
 		configFile:   "config.json",
-		clientConfig: make(map[string]interface{}),
 	}
 
 	for _, option := range options {

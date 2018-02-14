@@ -42,7 +42,7 @@ var CfgHash = ""
 var ClientCfgHash = ""
 var CfgFileName string = ""
 var CfgDisableConfigWatch = false
-var ClientCfg map[string]interface{}
+var ClientCfg map[string]string = map[string]string{}
 var originalDisableDebugLvl l4g.Level = l4g.DEBUG
 var siteURL = ""
 
@@ -437,8 +437,8 @@ func RegenerateClientConfig() {
 	ClientCfg = getClientConfig(Cfg)
 }
 
-func getClientConfig(c *model.Config) map[string]interface{} {
-	props := make(map[string]interface{})
+func getClientConfig(c *model.Config) map[string]string {
+	props := make(map[string]string)
 
 	props["Version"] = model.CurrentVersion
 	props["BuildNumber"] = model.BuildNumber
@@ -552,7 +552,7 @@ func getClientConfig(c *model.Config) map[string]interface{} {
 
 	props["PluginsEnabled"] = strconv.FormatBool(*c.PluginSettings.Enable)
 	props["EnableTimezoneSelection"] = strconv.FormatBool(*c.DisplaySettings.EnableTimezoneSelection)
-	props["SupportedTimezones"] = c.SupportedTimezones
+	props["SupportedTimezones"] = strings.Join(c.SupportedTimezones, ",")
 
 	if IsLicensed() {
 		License := License()
