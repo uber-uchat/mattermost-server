@@ -66,13 +66,21 @@ func (a *App) SendNotifications(post *model.Post, team *model.Team, channel *mod
 			}
 		}
 
-		if _, ok := profileMap[otherUserId]; ok {
+		otherUser, ok := profileMap[otherUserId]
+		if ok {
 			mentionedUserIds[otherUserId] = true
 		}
 
 		if post.Props["from_webhook"] == "true" {
 			mentionedUserIds[post.UserId] = true
 		}
+
+		if post.Type != model.POST_AUTO_RESPONSE {
+			a.Go(func() {
+				a.sendOutOfOfficeAutoResponse(channel, otherUser)
+			})
+		}
+
 	} else {
 		keywords := a.GetMentionKeywordsInChannel(profileMap, post.Type != model.POST_HEADER_CHANGE && post.Type != model.POST_PURPOSE_CHANGE)
 
@@ -743,6 +751,25 @@ func (a *App) getMobileAppSessions(userId string) ([]*model.Session, *model.AppE
 		return nil, result.Err
 	} else {
 		return result.Data.([]*model.Session), nil
+	}
+}
+
+func (a *App) sendOutOfOfficeAutoResponse(channel *model.Channel, receiver *model.User) {
+	active, message :=
+		receiver.NotifyProps["auto_reply_active"] == "true",
+		receiver.NotifyProps["auto_reply_message"]
+
+	if active && message != "" {
+		autoResponsePost := &model.Post{
+			ChannelId: channel.Id,
+			Message:   message,
+			Type:      model.POST_AUTO_RESPONSE,
+			UserId:    receiver.Id,
+		}
+
+		if _, err := a.CreatePost(autoResponsePost, channel, false); err != nil {
+			l4g.Error(err.Error())
+		}
 	}
 }
 
