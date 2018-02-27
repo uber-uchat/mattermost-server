@@ -71,6 +71,10 @@ func updateUserStatus(c *Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if status.Status != model.STATUS_DND {
+		c.App.DisableAutoResponse(c.Params.UserId, c.IsSystemAdmin())
+	}
+
 	switch status.Status {
 	case "online":
 		c.App.SetStatusOnline(c.Params.UserId, "", true)
