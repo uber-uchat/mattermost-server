@@ -61,13 +61,21 @@ func (a *App) SendNotifications(post *model.Post, team *model.Team, channel *mod
 			otherUserId = userIds[0]
 		}
 
-		if _, ok := profileMap[otherUserId]; ok {
+		otherUser, ok := profileMap[otherUserId]
+		if ok {
 			mentionedUserIds[otherUserId] = true
 		}
 
 		if post.Props["from_webhook"] == "true" {
 			mentionedUserIds[post.UserId] = true
 		}
+
+		if post.Type != model.POST_AUTO_RESPONSE {
+			a.Go(func() {
+				a.SendAutoResponse(channel, otherUser)
+			})
+		}
+
 	} else {
 		keywords := a.GetMentionKeywordsInChannel(profileMap, post.Type != model.POST_HEADER_CHANGE && post.Type != model.POST_PURPOSE_CHANGE)
 
