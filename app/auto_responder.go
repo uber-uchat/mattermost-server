@@ -43,7 +43,6 @@ func (a *App) SetAutoResponseStatus(user *model.User, oldNotifyProps model.Strin
 }
 
 func (a *App) DisableAutoResponse(userId string, asAdmin bool) *model.AppError {
-
 	user, err := a.GetUser(userId)
 	if err != nil {
 		return err
