@@ -158,14 +158,6 @@ func (a *App) ExecuteCommand(args *model.CommandArgs) (*model.CommandResponse, *
 	message := strings.Join(parts[1:], " ")
 	provider := GetCommandProvider(trigger)
 
-	if trigger == model.STATUS_ONLINE || trigger == model.STATUS_AWAY ||
-		trigger == model.STATUS_DND || trigger == model.STATUS_OFFLINE {
-		status, err := a.GetStatus(args.UserId)
-		if err == nil && status.Status == model.STATUS_OUT_OF_OFFICE {
-			return nil, model.NewAppError("ExecuteCommand", "api.command.execute_status_command.failed.app_error", map[string]interface{}{"Trigger": trigger}, "", http.StatusInternalServerError)
-		}
-	}
-
 	if provider != nil {
 		if cmd := provider.GetCommand(a, args.T); cmd != nil {
 			response := provider.DoCommand(a, args, message)
