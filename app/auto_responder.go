@@ -10,6 +10,10 @@ import (
 )
 
 func (a *App) SendAutoResponse(channel *model.Channel, receiver *model.User) {
+	if receiver == nil || receiver.NotifyProps == nil {
+		return
+	}
+
 	active, message :=
 		receiver.NotifyProps["auto_reply_active"] == "true",
 		receiver.NotifyProps["auto_reply_message"]
