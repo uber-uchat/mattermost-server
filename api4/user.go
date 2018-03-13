@@ -594,6 +594,7 @@ func patchUser(c *Context, w http.ResponseWriter, r *http.Request) {
 		c.SetInvalidParam("user_id")
 		return
 	}
+
 	if c.Session.IsOAuth && patch.Email != nil {
 		if err != nil {
 			c.Err = err
