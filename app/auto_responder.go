@@ -14,9 +14,8 @@ func (a *App) SendAutoResponse(channel *model.Channel, receiver *model.User) {
 		return
 	}
 
-	active, message :=
-		receiver.NotifyProps["auto_reply_active"] == "true",
-		receiver.NotifyProps["auto_reply_message"]
+	active := receiver.NotifyProps["auto_reply_active"] == "true"
+	message := receiver.NotifyProps["auto_reply_message"]
 
 	if active && message != "" {
 		autoResponsePost := &model.Post{
@@ -59,7 +58,10 @@ func (a *App) DisableAutoResponse(userId string, asAdmin bool) *model.AppError {
 		patch.NotifyProps = user.NotifyProps
 		patch.NotifyProps["auto_reply_active"] = "false"
 
-		a.PatchUser(userId, patch, asAdmin)
+		_, err := a.PatchUser(userId, patch, asAdmin)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
