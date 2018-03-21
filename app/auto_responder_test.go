@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestSetAutoResponseStatus(t *testing.T) {
+func TestSetAutoResponderStatus(t *testing.T) {
 	th := Setup().InitBasic()
 	defer th.TearDown()
 
@@ -27,7 +27,7 @@ func TestSetAutoResponseStatus(t *testing.T) {
 
 	userUpdated1, _ := th.App.PatchUser(user.Id, patch, true)
 
-	// autoResponse is enabled, status should be OOO
+	// autoResponder is enabled, status should be OOO
 	th.App.SetAutoResponderStatus(userUpdated1, user.NotifyProps)
 
 	status, err := th.App.GetStatus(userUpdated1.Id)
@@ -41,7 +41,7 @@ func TestSetAutoResponseStatus(t *testing.T) {
 
 	userUpdated2, _ := th.App.PatchUser(user.Id, patch2, true)
 
-	// autoResponse is disabled, status should be ONLINE
+	// autoResponder is disabled, status should be ONLINE
 	th.App.SetAutoResponderStatus(userUpdated2, userUpdated1.NotifyProps)
 
 	status, err = th.App.GetStatus(userUpdated2.Id)
@@ -50,7 +50,7 @@ func TestSetAutoResponseStatus(t *testing.T) {
 
 }
 
-func TestDisableAutoResponse(t *testing.T) {
+func TestDisableAutoResponder(t *testing.T) {
 	th := Setup().InitBasic()
 	defer th.TearDown()
 
