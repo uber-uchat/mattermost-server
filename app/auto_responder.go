@@ -18,34 +18,34 @@ func (a *App) SendAutoResponse(channel *model.Channel, receiver *model.User) {
 	message := receiver.NotifyProps["auto_responder_message"]
 
 	if active && message != "" {
-		autoResponsePost := &model.Post{
+		autoResponderPost := &model.Post{
 			ChannelId: channel.Id,
 			Message:   message,
 			Type:      model.POST_AUTO_RESPONDER,
 			UserId:    receiver.Id,
 		}
 
-		if _, err := a.CreatePost(autoResponsePost, channel, false); err != nil {
+		if _, err := a.CreatePost(autoResponderPost, channel, false); err != nil {
 			l4g.Error(err.Error())
 		}
 	}
 }
 
-func (a *App) SetAutoResponseStatus(user *model.User, oldNotifyProps model.StringMap) {
+func (a *App) SetAutoResponderStatus(user *model.User, oldNotifyProps model.StringMap) {
 	active := user.NotifyProps["auto_responder_active"] == "true"
 	oldActive := oldNotifyProps["auto_responder_active"] == "true"
 
-	autoResponseEnabled := !oldActive && active
-	autoResponseDisabled := oldActive && !active
+	autoResponderEnabled := !oldActive && active
+	autoResponderDisabled := oldActive && !active
 
-	if autoResponseEnabled {
+	if autoResponderEnabled {
 		a.SetStatusOutOfOffice(user.Id)
-	} else if autoResponseDisabled {
+	} else if autoResponderDisabled {
 		a.SetStatusOnline(user.Id, "", true)
 	}
 }
 
-func (a *App) DisableAutoResponse(userId string, asAdmin bool) *model.AppError {
+func (a *App) DisableAutoResponder(userId string, asAdmin bool) *model.AppError {
 	user, err := a.GetUser(userId)
 	if err != nil {
 		return err

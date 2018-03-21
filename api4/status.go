@@ -73,7 +73,7 @@ func updateUserStatus(c *Context, w http.ResponseWriter, r *http.Request) {
 
 	currentStatus, err := c.App.GetStatus(c.Params.UserId)
 	if err == nil && currentStatus.Status == model.STATUS_OUT_OF_OFFICE && status.Status != model.STATUS_OUT_OF_OFFICE {
-		c.App.DisableAutoResponse(c.Params.UserId, c.IsSystemAdmin())
+		c.App.DisableAutoResponder(c.Params.UserId, c.IsSystemAdmin())
 	}
 
 	switch status.Status {

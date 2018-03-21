@@ -612,7 +612,7 @@ func patchUser(c *Context, w http.ResponseWriter, r *http.Request) {
 		c.Err = err
 		return
 	} else {
-		c.App.SetAutoResponseStatus(ruser, ouser.NotifyProps)
+		c.App.SetAutoResponderStatus(ruser, ouser.NotifyProps)
 		c.LogAudit("")
 		w.Write([]byte(ruser.ToJson()))
 	}
