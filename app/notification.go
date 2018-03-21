@@ -75,7 +75,7 @@ func (a *App) SendNotifications(post *model.Post, team *model.Team, channel *mod
 			mentionedUserIds[post.UserId] = true
 		}
 
-		if post.Type != model.POST_AUTO_RESPONSE {
+		if post.Type != model.POST_AUTO_RESPONDER {
 			a.Go(func() {
 				a.SendAutoResponse(channel, otherUser)
 			})

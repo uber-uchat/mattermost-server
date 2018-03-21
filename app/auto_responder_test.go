@@ -36,8 +36,8 @@ func TestSetAutoResponseStatus(t *testing.T) {
 
 	patch2 := &model.UserPatch{}
 	patch2.NotifyProps = make(map[string]string)
-	patch2.NotifyProps["auto_reply_active"] = "false"
-	patch2.NotifyProps["auto_reply_message"] = "Hello, I'm unavailable today."
+	patch2.NotifyProps["auto_responder_active"] = "false"
+	patch2.NotifyProps["auto_responder_message"] = "Hello, I'm unavailable today."
 
 	userUpdated2, _ := th.App.PatchUser(user.Id, patch2, true)
 
@@ -61,8 +61,8 @@ func TestDisableAutoResponse(t *testing.T) {
 
 	patch := &model.UserPatch{}
 	patch.NotifyProps = make(map[string]string)
-	patch.NotifyProps["auto_reply_active"] = "true"
-	patch.NotifyProps["auto_reply_message"] = "Hello, I'm unavailable today."
+	patch.NotifyProps["auto_responder_active"] = "true"
+	patch.NotifyProps["auto_responder_message"] = "Hello, I'm unavailable today."
 
 	th.App.PatchUser(user.Id, patch, true)
 
@@ -70,13 +70,13 @@ func TestDisableAutoResponse(t *testing.T) {
 
 	userUpdated1, err := th.App.GetUser(user.Id)
 	require.Nil(t, err)
-	assert.Equal(t, userUpdated1.NotifyProps["auto_reply_active"], "false")
+	assert.Equal(t, userUpdated1.NotifyProps["auto_responder_active"], "false")
 
 	th.App.DisableAutoResponse(user.Id, true)
 
 	userUpdated2, err := th.App.GetUser(user.Id)
 	require.Nil(t, err)
-	assert.Equal(t, userUpdated2.NotifyProps["auto_reply_active"], "false")
+	assert.Equal(t, userUpdated2.NotifyProps["auto_responder_active"], "false")
 }
 
 func TestSendAutoResponseSuccess(t *testing.T) {
@@ -88,8 +88,8 @@ func TestSendAutoResponseSuccess(t *testing.T) {
 
 	patch := &model.UserPatch{}
 	patch.NotifyProps = make(map[string]string)
-	patch.NotifyProps["auto_reply_active"] = "true"
-	patch.NotifyProps["auto_reply_message"] = "Hello, I'm unavailable today."
+	patch.NotifyProps["auto_responder_active"] = "true"
+	patch.NotifyProps["auto_responder_message"] = "Hello, I'm unavailable today."
 
 	userUpdated1, err := th.App.PatchUser(user.Id, patch, true)
 	require.Nil(t, err)
@@ -101,7 +101,7 @@ func TestSendAutoResponseSuccess(t *testing.T) {
 	} else {
 		autoResponderPostFound := false
 		for _, post := range list.Posts {
-			if post.Type == model.POST_AUTO_RESPONSE {
+			if post.Type == model.POST_AUTO_RESPONDER {
 				autoResponderPostFound = true
 			}
 		}
@@ -118,8 +118,8 @@ func TestSendAutoResponseFailure(t *testing.T) {
 
 	patch := &model.UserPatch{}
 	patch.NotifyProps = make(map[string]string)
-	patch.NotifyProps["auto_reply_active"] = "false"
-	patch.NotifyProps["auto_reply_message"] = "Hello, I'm unavailable today."
+	patch.NotifyProps["auto_responder_active"] = "false"
+	patch.NotifyProps["auto_responder_message"] = "Hello, I'm unavailable today."
 
 	userUpdated1, err := th.App.PatchUser(user.Id, patch, true)
 	require.Nil(t, err)
@@ -131,7 +131,7 @@ func TestSendAutoResponseFailure(t *testing.T) {
 	} else {
 		autoResponderPostFound := false
 		for _, post := range list.Posts {
-			if post.Type == model.POST_AUTO_RESPONSE {
+			if post.Type == model.POST_AUTO_RESPONDER {
 				autoResponderPostFound = true
 			}
 		}
