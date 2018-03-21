@@ -326,9 +326,7 @@ func (a *App) SetStatusOutOfOffice(userId string) {
 	event := model.NewWebSocketEvent(model.WEBSOCKET_EVENT_STATUS_CHANGE, "", "", status.UserId, nil)
 	event.Add("status", model.STATUS_OUT_OF_OFFICE)
 	event.Add("user_id", status.UserId)
-	a.Go(func() {
-		a.Publish(event)
-	})
+	a.Publish(event)
 }
 
 func GetStatusFromCache(userId string) *model.Status {
