@@ -996,6 +996,7 @@ type TeamSettings struct {
 	MaxNotificationsPerChannel          *int64
 	EnableConfirmNotificationsToChannel *bool
 	TeammateNameDisplay                 *string
+	ExperimentalEnableAutomaticReplies  *bool
 	ExperimentalTownSquareIsReadOnly    *bool
 	ExperimentalPrimaryTeam             *string
 }
@@ -1088,6 +1089,10 @@ func (s *TeamSettings) SetDefaults() {
 
 	if s.EnableConfirmNotificationsToChannel == nil {
 		s.EnableConfirmNotificationsToChannel = NewBool(true)
+	}
+
+	if s.ExperimentalEnableAutomaticReplies == nil {
+		s.ExperimentalEnableAutomaticReplies = NewBool(false)
 	}
 
 	if s.ExperimentalTownSquareIsReadOnly == nil {
