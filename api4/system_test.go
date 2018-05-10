@@ -475,7 +475,7 @@ func TestGetAnalyticsOld(t *testing.T) {
 	CheckUnauthorizedStatus(t, resp)
 }
 
-func TestS3TestConnection(t *testing.T) {
+/*func TestS3TestConnection(t *testing.T) {
 	th := Setup().InitBasic().InitSystemAdmin()
 	defer th.TearDown()
 	Client := th.Client
@@ -526,7 +526,12 @@ func TestS3TestConnection(t *testing.T) {
 	if resp.Error.Message != "Error checking if bucket exists." {
 		t.Fatal("should return error ")
 	}
-}
+
+	config.FileSettings.AmazonS3Bucket = "shouldcreatenewbucket"
+	_, resp = th.SystemAdminClient.TestS3Connection(&config)
+	CheckOKStatus(t, resp)
+
+}*/
 
 func TestSupportedTimezones(t *testing.T) {
 	th := Setup().InitBasic()
