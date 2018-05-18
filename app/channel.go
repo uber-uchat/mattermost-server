@@ -572,7 +572,7 @@ func (a *App) addUserToChannel(user *model.User, channel *model.Channel, teamMem
 		return nil, model.NewAppError("AddUserToChannel", "api.channel.add_user_to_channel.deleted.app_error", nil, "", http.StatusBadRequest)
 	}
 
-	if channel.Type != model.CHANNEL_OPEN && channel.Type != model.CHANNEL_PRIVATE {
+	if channel.Type != model.CHANNEL_OPEN && channel.Type != model.CHANNEL_PRIVATE && channel.Type != model.CHANNEL_FEED {
 		return nil, model.NewAppError("AddUserToChannel", "api.channel.add_user_to_channel.type.app_error", nil, "", http.StatusBadRequest)
 	}
 
