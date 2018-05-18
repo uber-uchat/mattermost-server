@@ -19,6 +19,7 @@ const (
 	CHANNEL_PRIVATE                = "P"
 	CHANNEL_DIRECT                 = "D"
 	CHANNEL_GROUP                  = "G"
+	CHANNEL_FEED                   = "F"
 	CHANNEL_GROUP_MAX_USERS        = 8
 	CHANNEL_GROUP_MIN_USERS        = 3
 	DEFAULT_CHANNEL                = "town-square"
@@ -107,7 +108,7 @@ func (o *Channel) IsValid() *AppError {
 		return NewAppError("Channel.IsValid", "model.channel.is_valid.2_or_more.app_error", nil, "id="+o.Id, http.StatusBadRequest)
 	}
 
-	if !(o.Type == CHANNEL_OPEN || o.Type == CHANNEL_PRIVATE || o.Type == CHANNEL_DIRECT || o.Type == CHANNEL_GROUP) {
+	if !(o.Type == CHANNEL_OPEN || o.Type == CHANNEL_PRIVATE || o.Type == CHANNEL_DIRECT || o.Type == CHANNEL_GROUP || o.Type == CHANNEL_FEED) {
 		return NewAppError("Channel.IsValid", "model.channel.is_valid.type.app_error", nil, "id="+o.Id, http.StatusBadRequest)
 	}
 
