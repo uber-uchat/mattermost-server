@@ -124,6 +124,7 @@ func (a *App) SendSignInChangeEmail(email, method, locale, siteURL string) *mode
 }
 
 func (a *App) SendWelcomeEmail(userId string, email string, verified bool, locale, siteURL string) *model.AppError {
+	/*
 	T := utils.GetUserTranslations(locale)
 
 	rawUrl, _ := url.Parse(siteURL)
@@ -157,7 +158,7 @@ func (a *App) SendWelcomeEmail(userId string, email string, verified bool, local
 
 	if err := a.SendMail(email, subject, bodyPage.Render()); err != nil {
 		return model.NewAppError("SendWelcomeEmail", "api.user.send_welcome_email_and_forget.failed.error", nil, err.Error(), http.StatusInternalServerError)
-	}
+	}*/
 
 	return nil
 }
