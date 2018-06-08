@@ -1,7 +1,6 @@
 package api4
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"strings"
