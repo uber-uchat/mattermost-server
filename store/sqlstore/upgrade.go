@@ -536,14 +536,14 @@ func UpgradeDatabaseToVersion56(sqlStore SqlStore) {
 			sqlStore.RemoveIndexIfExists("idx_users_lastname_lower", "lower(LastName)")
 		}
 
-		saveSchemaVersion(sqlStore, VERSION_5_6_0)
+		// saveSchemaVersion(sqlStore, VERSION_5_6_0)
 	}
 
 }
 
 func UpgradeDatabaseToVersion57(sqlStore SqlStore) {
 	if shouldPerformUpgrade(sqlStore, VERSION_5_6_0, VERSION_5_7_0) {
-		saveSchemaVersion(sqlStore, VERSION_5_7_0)
+		// saveSchemaVersion(sqlStore, VERSION_5_7_0)
 	}
 }
 
@@ -563,12 +563,12 @@ func UpgradeDatabaseToVersion58(sqlStore SqlStore) {
 		sqlStore.AlterColumnDefaultIfExists("OutgoingWebhooks", "IconURL", nil, model.NewString(""))
 		sqlStore.AlterColumnDefaultIfExists("PluginKeyValueStore", "ExpireAt", model.NewString("NULL"), model.NewString("NULL"))
 
-		saveSchemaVersion(sqlStore, VERSION_5_8_0)
+		// saveSchemaVersion(sqlStore, VERSION_5_8_0)
 	}
 }
 
 func UpgradeDatabaseToVersion59(sqlStore SqlStore) {
 	if shouldPerformUpgrade(sqlStore, VERSION_5_8_0, VERSION_5_9_0) {
-		saveSchemaVersion(sqlStore, VERSION_5_9_0)
+		// saveSchemaVersion(sqlStore, VERSION_5_9_0)
 	}
 }
