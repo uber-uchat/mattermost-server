@@ -657,7 +657,7 @@ func UpgradeDatabaseToVersion510(sqlStore SqlStore) {
 		sqlStore.CreateIndexIfNotExists("idx_groupteams_teamid", "GroupTeams", "TeamId")
 		sqlStore.CreateIndexIfNotExists("idx_groupchannels_channelid", "GroupChannels", "ChannelId")
 
-		saveSchemaVersion(sqlStore, VERSION_5_10_0)
+		//saveSchemaVersion(sqlStore, VERSION_5_10_0)
 	}
 }
 
@@ -676,7 +676,7 @@ func UpgradeDatabaseToVersion511(sqlStore SqlStore) {
 			}
 		}
 
-		saveSchemaVersion(sqlStore, VERSION_5_11_0)
+		//saveSchemaVersion(sqlStore, VERSION_5_11_0)
 	}
 }
 
