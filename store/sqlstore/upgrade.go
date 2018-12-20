@@ -508,13 +508,13 @@ func UpgradeDatabaseToVersion54(sqlStore SqlStore) {
 			time.Sleep(time.Second)
 			os.Exit(EXIT_GENERIC_FAILURE)
 		}
-		saveSchemaVersion(sqlStore, VERSION_5_4_0)
+		//saveSchemaVersion(sqlStore, VERSION_5_4_0)
 	}
 }
 
 func UpgradeDatabaseToVersion55(sqlStore SqlStore) {
 	if shouldPerformUpgrade(sqlStore, VERSION_5_4_0, VERSION_5_5_0) {
-		saveSchemaVersion(sqlStore, VERSION_5_5_0)
+		//saveSchemaVersion(sqlStore, VERSION_5_5_0)
 	}
 }
 
@@ -532,15 +532,15 @@ func UpgradeDatabaseToVersion56(sqlStore SqlStore) {
 			sqlStore.RemoveIndexIfExists("idx_users_firstname_lower", "lower(FirstName)")
 			sqlStore.RemoveIndexIfExists("idx_users_lastname_lower", "lower(LastName)")
 		}
-		saveSchemaVersion(sqlStore, VERSION_5_6_0)
+		//saveSchemaVersion(sqlStore, VERSION_5_6_0)
 	}
 
 }
 
 func UpgradeDatabaseToVersion57(sqlStore SqlStore) {
-	if shouldPerformUpgrade(sqlStore, VERSION_5_6_0, VERSION_5_7_0) {
-		saveSchemaVersion(sqlStore, VERSION_5_7_0)
-	}
+	//if shouldPerformUpgrade(sqlStore, VERSION_5_6_0, VERSION_5_7_0) {
+	//saveSchemaVersion(sqlStore, VERSION_5_7_0)
+	//}
 }
 
 func UpgradeDatabaseToVersion58(sqlStore SqlStore) {
