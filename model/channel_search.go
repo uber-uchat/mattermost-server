@@ -9,7 +9,8 @@ import (
 )
 
 type ChannelSearch struct {
-	Term string `json:"term"`
+	Term           string `json:"term"`
+	IncludePrivate bool   `json:"include_private"`
 }
 
 // ToJson convert a Channel to a json string

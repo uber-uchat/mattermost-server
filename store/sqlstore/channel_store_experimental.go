@@ -38,7 +38,7 @@ type SqlChannelStoreExperimental struct {
 
 func NewSqlChannelStoreExperimental(sqlStore SqlStore, metrics einterfaces.MetricsInterface, enabled bool) store.ChannelStore {
 	s := &SqlChannelStoreExperimental{
-		SqlChannelStore: *NewSqlChannelStore(sqlStore, metrics).(*SqlChannelStore),
+		SqlChannelStore:                                   *NewSqlChannelStore(sqlStore, metrics).(*SqlChannelStore),
 		experimentalPublicChannelsMaterializationDisabled: new(uint32),
 	}
 
@@ -300,10 +300,10 @@ func (s SqlChannelStoreExperimental) SetDeleteAt(channelId string, deleteAt, upd
 		// Additionally propagate the write to the PublicChannels table.
 		if _, err := transaction.Exec(`
 			UPDATE
-			    PublicChannels 
-			SET 
+			    PublicChannels
+			SET
 			    DeleteAt = :DeleteAt
-			WHERE 
+			WHERE
 			    Id = :ChannelId
 		`, map[string]interface{}{
 			"DeleteAt":  deleteAt,
@@ -342,7 +342,7 @@ func (s SqlChannelStoreExperimental) PermanentDeleteByTeam(teamId string) store.
 		// Additionally propagate the deletions to the PublicChannels table.
 		if _, err := transaction.Exec(`
 			DELETE FROM
-			    PublicChannels 
+			    PublicChannels
 			WHERE
 			    TeamId = :TeamId
 		`, map[string]interface{}{
@@ -381,7 +381,7 @@ func (s SqlChannelStoreExperimental) PermanentDelete(channelId string) store.Sto
 		// Additionally propagate the deletion to the PublicChannels table.
 		if _, err := transaction.Exec(`
 			DELETE FROM
-			    PublicChannels 
+			    PublicChannels
 			WHERE
 			    Id = :ChannelId
 		`, map[string]interface{}{
@@ -581,9 +581,9 @@ func (s SqlChannelStoreExperimental) AutocompleteInTeam(teamId string, term stri
 	})
 }
 
-func (s SqlChannelStoreExperimental) SearchInTeam(teamId string, term string, includeDeleted bool) store.StoreChannel {
-	if !s.IsExperimentalPublicChannelsMaterializationEnabled() {
-		return s.SqlChannelStore.SearchInTeam(teamId, term, includeDeleted)
+func (s SqlChannelStoreExperimental) SearchInTeam(teamId string, term string, includeDeleted bool, includePrivate bool) store.StoreChannel {
+	if includePrivate || !s.IsExperimentalPublicChannelsMaterializationEnabled() {
+		return s.SqlChannelStore.SearchInTeam(teamId, term, includeDeleted, includePrivate)
 	}
 
 	return store.Do(func(result *store.StoreResult) {

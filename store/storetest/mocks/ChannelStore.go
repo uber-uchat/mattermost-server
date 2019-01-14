@@ -907,13 +907,13 @@ func (_m *ChannelStore) SaveMember(member *model.ChannelMember) store.StoreChann
 	return r0
 }
 
-// SearchInTeam provides a mock function with given fields: teamId, term, includeDeleted
-func (_m *ChannelStore) SearchInTeam(teamId string, term string, includeDeleted bool) store.StoreChannel {
-	ret := _m.Called(teamId, term, includeDeleted)
+// SearchInTeam provides a mock function with given fields: teamId, term, includeDeleted, includePrivate
+func (_m *ChannelStore) SearchInTeam(teamId string, term string, includeDeleted bool, includePrivate bool) store.StoreChannel {
+	ret := _m.Called(teamId, term, includeDeleted, includePrivate)
 
 	var r0 store.StoreChannel
-	if rf, ok := ret.Get(0).(func(string, string, bool) store.StoreChannel); ok {
-		r0 = rf(teamId, term, includeDeleted)
+	if rf, ok := ret.Get(0).(func(string, string, bool, bool) store.StoreChannel); ok {
+		r0 = rf(teamId, term, includeDeleted, includePrivate)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(store.StoreChannel)

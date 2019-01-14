@@ -1486,7 +1486,7 @@ func (s SqlChannelStore) RemoveAllDeactivatedMembers(channelId string) store.Sto
 			DELETE
 			FROM
 				ChannelMembers
-			WHERE 
+			WHERE
 				UserId IN (
 					SELECT
 						Id
@@ -1840,11 +1840,15 @@ func (s SqlChannelStore) autocompleteInTeamForSearchDirectMessages(userId string
 	return channels, nil
 }
 
-func (s SqlChannelStore) SearchInTeam(teamId string, term string, includeDeleted bool) store.StoreChannel {
+func (s SqlChannelStore) SearchInTeam(teamId string, term string, includeDeleted bool, includePrivate bool) store.StoreChannel {
 	return store.Do(func(result *store.StoreResult) {
 		deleteFilter := "AND DeleteAt = 0"
 		if includeDeleted {
 			deleteFilter = ""
+		}
+		publicFilter := "AND Type = 'O'"
+		if includePrivate {
+			publicFilter = ""
 		}
 		searchQuery := `
 			SELECT
@@ -1853,7 +1857,7 @@ func (s SqlChannelStore) SearchInTeam(teamId string, term string, includeDeleted
 				Channels
 			WHERE
 				TeamId = :TeamId
-				AND Type = 'O'
+				` + publicFilter + `
 				` + deleteFilter + `
 				SEARCH_CLAUSE
 			ORDER BY DisplayName

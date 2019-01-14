@@ -679,12 +679,19 @@ func searchChannelsForTeam(c *Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !c.App.SessionHasPermissionToTeam(c.Session, c.Params.TeamId, model.PERMISSION_LIST_TEAM_CHANNELS) {
-		c.SetPermissionError(model.PERMISSION_LIST_TEAM_CHANNELS)
-		return
+	if props.IncludePrivate {
+		if !c.App.SessionHasPermissionTo(c.Session, model.PERMISSION_MANAGE_SYSTEM) {
+			c.SetPermissionError(model.PERMISSION_MANAGE_SYSTEM)
+			return
+		}
+	} else {
+		if !c.App.SessionHasPermissionToTeam(c.Session, c.Params.TeamId, model.PERMISSION_LIST_TEAM_CHANNELS) {
+			c.SetPermissionError(model.PERMISSION_LIST_TEAM_CHANNELS)
+			return
+		}
 	}
 
-	channels, err := c.App.SearchChannels(c.Params.TeamId, props.Term)
+	channels, err := c.App.SearchChannels(c.Params.TeamId, props.Term, props.IncludePrivate)
 	if err != nil {
 		c.Err = err
 		return

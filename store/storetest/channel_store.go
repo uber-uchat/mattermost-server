@@ -1985,25 +1985,28 @@ func testChannelStoreSearchInTeam(t *testing.T, ss store.Store) {
 		TeamId          string
 		Term            string
 		IncludeDeleted  bool
+		IncludePrivate  bool
 		ExpectedResults *model.ChannelList
 	}{
-		{"ChannelA", teamId, "ChannelA", false, &model.ChannelList{&o1, &o3}},
-		{"ChannelA, include deleted", teamId, "ChannelA", true, &model.ChannelList{&o1, &o3, &o13}},
-		{"ChannelA, other team", otherTeamId, "ChannelA", false, &model.ChannelList{&o2}},
-		{"empty string", teamId, "", false, &model.ChannelList{&o1, &o3, &o12, &o11, &o7, &o6, &o10, &o9}},
-		{"no matches", teamId, "blargh", false, &model.ChannelList{}},
-		{"prefix", teamId, "off-", false, &model.ChannelList{&o7, &o6}},
-		{"full match with dash", teamId, "off-topic", false, &model.ChannelList{&o6}},
-		{"town square", teamId, "town square", false, &model.ChannelList{&o9}},
-		{"the in name", teamId, "the", false, &model.ChannelList{&o10}},
-		{"Mobile", teamId, "Mobile", false, &model.ChannelList{&o11}},
-		{"search purpose", teamId, "now searchable", false, &model.ChannelList{&o12}},
-		{"pipe ignored", teamId, "town square |", false, &model.ChannelList{&o9}},
+		{"ChannelA", teamId, "ChannelA", false, false, &model.ChannelList{&o1, &o3}},
+		{"ChannelA, include deleted", teamId, "ChannelA", true, false, &model.ChannelList{&o1, &o3, &o13}},
+		{"ChannelA, other team", otherTeamId, "ChannelA", false, false, &model.ChannelList{&o2}},
+		{"empty string", teamId, "", false, false, &model.ChannelList{&o1, &o3, &o12, &o11, &o7, &o6, &o10, &o9}},
+		{"empty string with private", teamId, "", false, true, &model.ChannelList{&o1, &o3, &o4, &o5, &o6, &o7, &o8, &o9, &o10, &o11, &o12}},
+		{"Channel, include private", teamId, "Channel", true, false, &model.ChannelList{&o1, &o3, &o4, &o5, &o12, &o13}},
+		{"no matches", teamId, "blargh", false, false, &model.ChannelList{}},
+		{"prefix", teamId, "off-", false, false, &model.ChannelList{&o7, &o6}},
+		{"prefix with public", teamId, "off-", false, true, &model.ChannelList{&o6, &o7, &o8}},
+		{"full match with dash", teamId, "off-topic", false, false, &model.ChannelList{&o6}},
+		{"town square", teamId, "town square", false, false, &model.ChannelList{&o9}},
+		{"the in name", teamId, "the", false, false, &model.ChannelList{&o10}},
+		{"Mobile", teamId, "Mobile", false, false, &model.ChannelList{&o11}},
+		{"search purpose", teamId, "now searchable", false, false, &model.ChannelList{&o12}},
+		{"pipe ignored", teamId, "town square |", false, false, &model.ChannelList{&o9}},
 	}
 
-	for name, search := range map[string]func(teamId string, term string, includeDeleted bool) store.StoreChannel{
+	for _, search := range map[string]func(teamId string, term string, includeDeleted bool) store.StoreChannel{
 		"AutocompleteInTeam": ss.Channel().AutocompleteInTeam,
-		"SearchInTeam":       ss.Channel().SearchInTeam,
 	} {
 		for _, testCase := range testCases {
 			t.Run(testCase.Description, func(t *testing.T) {
@@ -2011,11 +2014,22 @@ func testChannelStoreSearchInTeam(t *testing.T, ss store.Store) {
 				require.Nil(t, result.Err)
 
 				channels := result.Data.(*model.ChannelList)
+				sort.Sort(ByChannelDisplayName(*channels))
 
-				// AutoCompleteInTeam doesn't currently sort its output results.
-				if name == "AutocompleteInTeam" {
-					sort.Sort(ByChannelDisplayName(*channels))
-				}
+				require.Equal(t, testCase.ExpectedResults, channels)
+			})
+		}
+	}
+
+	for _, search := range map[string]func(teamId string, term string, includeDeleted bool, includePrivate bool) store.StoreChannel{
+		"SearchInTeam": ss.Channel().SearchInTeam,
+	} {
+		for _, testCase := range testCases {
+			t.Run(testCase.Description, func(t *testing.T) {
+				result := <-search(testCase.TeamId, testCase.Term, testCase.IncludeDeleted, testCase.IncludePrivate)
+				require.Nil(t, result.Err)
+
+				channels := result.Data.(*model.ChannelList)
 
 				require.Equal(t, testCase.ExpectedResults, channels)
 			})
@@ -2599,7 +2613,7 @@ func testMaterializedPublicChannels(t *testing.T, ss store.Store, s SqlSupplier)
 	store.Must(ss.Channel().Save(&o2, -1))
 
 	t.Run("o1 and o2 initially listed in public channels", func(t *testing.T) {
-		result := <-ss.Channel().SearchInTeam(teamId, "", true)
+		result := <-ss.Channel().SearchInTeam(teamId, "", true, false)
 		require.Nil(t, result.Err)
 		require.Equal(t, &model.ChannelList{&o1, &o2}, result.Data.(*model.ChannelList))
 	})
@@ -2609,7 +2623,7 @@ func testMaterializedPublicChannels(t *testing.T, ss store.Store, s SqlSupplier)
 	store.Must(ss.Channel().Delete(o1.Id, o1.DeleteAt))
 
 	t.Run("o1 still listed in public channels when marked as deleted", func(t *testing.T) {
-		result := <-ss.Channel().SearchInTeam(teamId, "", true)
+		result := <-ss.Channel().SearchInTeam(teamId, "", true, false)
 		require.Nil(t, result.Err)
 		require.Equal(t, &model.ChannelList{&o1, &o2}, result.Data.(*model.ChannelList))
 	})
@@ -2617,7 +2631,7 @@ func testMaterializedPublicChannels(t *testing.T, ss store.Store, s SqlSupplier)
 	<-ss.Channel().PermanentDelete(o1.Id)
 
 	t.Run("o1 no longer listed in public channels when permanently deleted", func(t *testing.T) {
-		result := <-ss.Channel().SearchInTeam(teamId, "", true)
+		result := <-ss.Channel().SearchInTeam(teamId, "", true, false)
 		require.Nil(t, result.Err)
 		require.Equal(t, &model.ChannelList{&o2}, result.Data.(*model.ChannelList))
 	})
@@ -2626,16 +2640,22 @@ func testMaterializedPublicChannels(t *testing.T, ss store.Store, s SqlSupplier)
 	require.Nil(t, (<-ss.Channel().Update(&o2)).Err)
 
 	t.Run("o2 no longer listed since now private", func(t *testing.T) {
-		result := <-ss.Channel().SearchInTeam(teamId, "", true)
+		result := <-ss.Channel().SearchInTeam(teamId, "", true, false)
 		require.Nil(t, result.Err)
 		require.Equal(t, &model.ChannelList{}, result.Data.(*model.ChannelList))
+	})
+
+	t.Run("o2 is private and listed since flag is set", func(t *testing.T) {
+		result := <-ss.Channel().SearchInTeam(teamId, "", true, true)
+		require.Nil(t, result.Err)
+		require.Equal(t, &model.ChannelList{&o2}, result.Data.(*model.ChannelList))
 	})
 
 	o2.Type = model.CHANNEL_OPEN
 	require.Nil(t, (<-ss.Channel().Update(&o2)).Err)
 
 	t.Run("o2 listed once again since now public", func(t *testing.T) {
-		result := <-ss.Channel().SearchInTeam(teamId, "", true)
+		result := <-ss.Channel().SearchInTeam(teamId, "", true, false)
 		require.Nil(t, result.Err)
 		require.Equal(t, &model.ChannelList{&o2}, result.Data.(*model.ChannelList))
 	})
@@ -2691,7 +2711,7 @@ func testMaterializedPublicChannels(t *testing.T, ss store.Store, s SqlSupplier)
 	require.Nil(t, err)
 
 	t.Run("verify o3 INSERT converted to UPDATE", func(t *testing.T) {
-		result := <-ss.Channel().SearchInTeam(teamId, "", true)
+		result := <-ss.Channel().SearchInTeam(teamId, "", true, false)
 		require.Nil(t, result.Err)
 		require.Equal(t, &model.ChannelList{&o2, &o3}, result.Data.(*model.ChannelList))
 	})
@@ -2720,7 +2740,7 @@ func testMaterializedPublicChannels(t *testing.T, ss store.Store, s SqlSupplier)
 	require.Nil(t, (<-ss.Channel().Update(&o4)).Err)
 
 	t.Run("verify o4 UPDATE converted to INSERT", func(t *testing.T) {
-		result := <-ss.Channel().SearchInTeam(teamId, "", true)
+		result := <-ss.Channel().SearchInTeam(teamId, "", true, false)
 		require.Nil(t, result.Err)
 		require.Equal(t, &model.ChannelList{&o2, &o3, &o4}, result.Data.(*model.ChannelList))
 	})
