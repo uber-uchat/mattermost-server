@@ -1803,7 +1803,7 @@ func (a *App) AutocompleteChannelsForSearch(teamId string, userId string, term s
 
 	term = strings.TrimSpace(term)
 
-	result := <-a.Srv.Store.Channel().AutocompleteInTeamForSearch(teamId, userId, term, includeDeleted)
+	result := <-a.Srv.Store.Channel().AutocompleteInTeam(teamId, term, includeDeleted)
 	if result.Err != nil {
 		return nil, result.Err
 	}
