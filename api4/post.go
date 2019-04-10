@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/mattermost/mattermost-server/config"
 	"github.com/mattermost/mattermost-server/model"
 )
 
@@ -303,6 +304,17 @@ func deletePost(c *Context, w http.ResponseWriter, r *http.Request) {
 	ReturnStatusOK(w)
 }
 
+func isMemberAllowedToJoin(c *Context, channel *model.Channel, userId string) bool {
+	uc := c.App.Srv.Store.User().Get(userId)
+	uresult := <-uc
+	if uresult.Err != nil {
+		return false
+	}
+	user := uresult.Data.(*model.User)
+
+	return config.IsMemberAllowedToJoin(channel, user, c.App.Config())
+}
+
 func getPostThread(c *Context, w http.ResponseWriter, r *http.Request) {
 	c.RequirePostId()
 	if c.Err != nil {
@@ -324,6 +336,11 @@ func getPostThread(c *Context, w http.ResponseWriter, r *http.Request) {
 	channel, err := c.App.GetChannel(post.ChannelId)
 	if err != nil {
 		c.Err = err
+		return
+	}
+
+	if !isMemberAllowedToJoin(c, channel, c.App.Session.UserId) {
+		c.SetPermissionError(model.PERMISSION_READ_CHANNEL)
 		return
 	}
 
@@ -542,10 +559,12 @@ func saveIsPinnedPost(c *Context, w http.ResponseWriter, r *http.Request, isPinn
 		return
 	}
 
-	if c.App.License() != nil &&
+	if (c.App.License() != nil &&
 		*c.App.Config().TeamSettings.ExperimentalTownSquareIsReadOnly &&
 		channel.Name == model.DEFAULT_CHANNEL &&
-		!c.App.RolesGrantPermission(user.GetRoles(), model.PERMISSION_MANAGE_SYSTEM.Id) {
+		!c.App.RolesGrantPermission(user.GetRoles(), model.PERMISSION_MANAGE_SYSTEM.Id)) ||
+		(config.IsReadOnlyChannel(channel, c.App.Config()) &&
+			!c.App.RolesGrantPermission(user.GetRoles(), model.PERMISSION_MANAGE_SYSTEM.Id)) {
 		c.Err = model.NewAppError("saveIsPinnedPost", "api.post.save_is_pinned_post.town_square_read_only", nil, "", http.StatusForbidden)
 		return
 	}
