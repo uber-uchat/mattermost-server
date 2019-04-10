@@ -15,6 +15,7 @@ import (
 	"strings"
 
 	"github.com/disintegration/imaging"
+	"github.com/mattermost/mattermost-server/config"
 	"github.com/mattermost/mattermost-server/mlog"
 	"github.com/mattermost/mattermost-server/model"
 	"github.com/mattermost/mattermost-server/plugin"
@@ -814,7 +815,8 @@ func (a *App) LeaveTeam(team *model.Team, user *model.User, requestorId string) 
 	}
 	channel := result.Data.(*model.Channel)
 
-	if *a.Config().ServiceSettings.ExperimentalEnableDefaultChannelLeaveJoinMessages {
+	if *a.Config().ServiceSettings.ExperimentalEnableDefaultChannelLeaveJoinMessages &&
+		!config.IsReadOnlyChannel(channel, a.Config()) {
 		if requestorId == user.Id {
 			if err := a.postLeaveTeamMessage(user, channel); err != nil {
 				mlog.Error(fmt.Sprint("Failed to post join/leave message", err))
