@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mattermost/mattermost-server/config"
 	"github.com/mattermost/mattermost-server/mlog"
 	"github.com/mattermost/mattermost-server/model"
 	"github.com/mattermost/mattermost-server/plugin"
@@ -170,10 +171,12 @@ func (a *App) CreatePost(post *model.Post, channel *model.Channel, triggerWebhoo
 	}
 	user := result.Data.(*model.User)
 
-	if a.License() != nil && *a.Config().TeamSettings.ExperimentalTownSquareIsReadOnly &&
+	if (a.License() != nil && *a.Config().TeamSettings.ExperimentalTownSquareIsReadOnly &&
 		!post.IsSystemMessage() &&
 		channel.Name == model.DEFAULT_CHANNEL &&
-		!a.RolesGrantPermission(user.GetRoles(), model.PERMISSION_MANAGE_SYSTEM.Id) {
+		!a.RolesGrantPermission(user.GetRoles(), model.PERMISSION_MANAGE_SYSTEM.Id)) ||
+		(!post.IsSystemMessage() && config.IsReadOnlyChannel(channel, a.Config()) &&
+			!a.RolesGrantPermission(user.GetRoles(), model.PERMISSION_MANAGE_SYSTEM.Id)) {
 		return nil, model.NewAppError("createPost", "api.post.create_post.town_square_read_only", nil, "", http.StatusForbidden)
 	}
 

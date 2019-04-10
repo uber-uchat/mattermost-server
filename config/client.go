@@ -22,6 +22,7 @@ func GenerateClientConfig(c *model.Config, diagnosticId string, license *model.L
 	props["TeammateNameDisplay"] = *c.TeamSettings.TeammateNameDisplay
 	props["ExperimentalPrimaryTeam"] = *c.TeamSettings.ExperimentalPrimaryTeam
 	props["ExperimentalViewArchivedChannels"] = strconv.FormatBool(*c.TeamSettings.ExperimentalViewArchivedChannels)
+	props["ReadOnlyChannels"] = strings.Join(c.TeamSettings.ReadOnlyChannels, ",")
 
 	props["EnableOAuthServiceProvider"] = strconv.FormatBool(*c.ServiceSettings.EnableOAuthServiceProvider)
 	props["GoogleDeveloperKey"] = *c.ServiceSettings.GoogleDeveloperKey
@@ -218,7 +219,6 @@ func GenerateLimitedClientConfig(c *model.Config, diagnosticId string, license *
 	props["EnableSignInWithEmail"] = strconv.FormatBool(*c.EmailSettings.EnableSignInWithEmail)
 	props["EnableSignInWithUsername"] = strconv.FormatBool(*c.EmailSettings.EnableSignInWithUsername)
 	props["EnableSignInWithEmailFromWebhook"] = strconv.FormatBool(*c.EmailSettings.EnableSignInWithEmailFromWebhook)
-
 
 	props["EmailLoginButtonColor"] = *c.EmailSettings.LoginButtonColor
 	props["EmailLoginButtonBorderColor"] = *c.EmailSettings.LoginButtonBorderColor
