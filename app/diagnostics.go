@@ -296,6 +296,7 @@ func (a *App) trackConfig() {
 		"experimental_town_square_is_read_only":     *cfg.TeamSettings.ExperimentalTownSquareIsReadOnly,
 		"experimental_primary_team":                 isDefault(*cfg.TeamSettings.ExperimentalPrimaryTeam, ""),
 		"experimental_default_channels":             len(cfg.TeamSettings.ExperimentalDefaultChannels),
+		"read_only_channels":                        len(cfg.TeamSettings.ReadOnlyChannels),
 	})
 
 	a.SendDiagnostic(TRACK_CONFIG_CLIENT_REQ, map[string]interface{}{
@@ -454,9 +455,9 @@ func (a *App) trackConfig() {
 	})
 
 	a.SendDiagnostic(TRACK_CONFIG_SAML, map[string]interface{}{
-		"enable":                              *cfg.SamlSettings.Enable,
-		"enable_sync_with_ldap":               *cfg.SamlSettings.EnableSyncWithLdap,
-		"enable_sync_with_ldap_include_auth":  *cfg.SamlSettings.EnableSyncWithLdapIncludeAuth,
+		"enable":                             *cfg.SamlSettings.Enable,
+		"enable_sync_with_ldap":              *cfg.SamlSettings.EnableSyncWithLdap,
+		"enable_sync_with_ldap_include_auth": *cfg.SamlSettings.EnableSyncWithLdapIncludeAuth,
 		"verify":                              *cfg.SamlSettings.Verify,
 		"encrypt":                             *cfg.SamlSettings.Encrypt,
 		"isdefault_scoping_idp_provider_id":   isDefault(*cfg.SamlSettings.ScopingIDPProviderId, ""),
