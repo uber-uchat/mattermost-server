@@ -1199,6 +1199,8 @@ type TeamSettings struct {
 	ExperimentalTownSquareIsReadOnly                          *bool
 	ExperimentalPrimaryTeam                                   *string
 	ExperimentalDefaultChannels                               []string
+	ReadOnlyChannels                                          []string
+	AllowedMembersFilePath                                    *string
 }
 
 func (s *TeamSettings) SetDefaults() {
@@ -1313,6 +1315,14 @@ func (s *TeamSettings) SetDefaults() {
 
 	if s.ExperimentalDefaultChannels == nil {
 		s.ExperimentalDefaultChannels = []string{}
+	}
+
+	if s.ReadOnlyChannels == nil {
+		s.ReadOnlyChannels = []string{}
+	}
+
+	if s.AllowedMembersFilePath == nil {
+		s.AllowedMembersFilePath = NewString("")
 	}
 
 	if s.DEPRECATED_DO_NOT_USE_EnableTeamCreation == nil {

@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	//"regexp"
+	//"io/ioutil"
 
 	"github.com/mattermost/mattermost-server/mlog"
 	"github.com/mattermost/mattermost-server/model"
@@ -788,6 +790,10 @@ func (a *App) addUserToChannel(user *model.User, channel *model.Channel, teamMem
 		return channelMember, nil
 	}
 
+	if !utils.IsMemberAllowedToJoin(channel, user, a.Config()) {
+		return nil, model.NewAppError("AddUserToChannel", "api.channel.add_user.to.channel.failed.not_allowed.app_error", nil, "", http.StatusBadRequest)
+	}
+
 	newMember := &model.ChannelMember{
 		ChannelId:   channel.Id,
 		UserId:      user.Id,
@@ -1238,6 +1244,7 @@ func (a *App) GetChannelUnread(channelId, userId string) (*model.ChannelUnread, 
 }
 
 func (a *App) JoinChannel(channel *model.Channel, userId string) *model.AppError {
+
 	userChan := a.Srv.Store.User().Get(userId)
 	memberChan := a.Srv.Store.Channel().GetMember(channel.Id, userId)
 

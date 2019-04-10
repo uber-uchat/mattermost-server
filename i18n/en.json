@@ -168,6 +168,10 @@
     "translation": "Failed to add user to channel because they have been removed from the team."
   },
   {
+    "id": "api.channel.add_user.to.channel.failed.not_allowed.app_error",
+    "translation": "Failed to add user to channel because they are not allowed into broadcast only channel."
+  },
+  {
     "id": "api.channel.add_user_to_channel.type.app_error",
     "translation": "Can not add user to this channel type"
   },

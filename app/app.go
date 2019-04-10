@@ -64,6 +64,7 @@ func New(options ...AppOption) *App {
 func (a *App) Shutdown() {
 	a.Srv.Shutdown()
 	a.Srv = nil
+	utils.DisableFileWatch()
 }
 
 func (a *App) configOrLicenseListener() {
