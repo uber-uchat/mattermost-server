@@ -22,6 +22,7 @@ func GenerateClientConfig(c *model.Config, diagnosticId string, license *model.L
 	props["TeammateNameDisplay"] = *c.TeamSettings.TeammateNameDisplay
 	props["ExperimentalPrimaryTeam"] = *c.TeamSettings.ExperimentalPrimaryTeam
 	props["ExperimentalViewArchivedChannels"] = strconv.FormatBool(*c.TeamSettings.ExperimentalViewArchivedChannels)
+	props["ReadOnlyChannels"] = strings.Join(c.TeamSettings.ReadOnlyChannels, ",")
 
 	props["EnableBotAccountCreation"] = strconv.FormatBool(*c.ServiceSettings.EnableBotAccountCreation)
 	props["EnableOAuthServiceProvider"] = strconv.FormatBool(*c.ServiceSettings.EnableOAuthServiceProvider)
