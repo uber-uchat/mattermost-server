@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	goi18n "github.com/mattermost/go-i18n/i18n"
+	"github.com/mattermost/mattermost-server/config"
 	"github.com/mattermost/mattermost-server/einterfaces"
 	"github.com/mattermost/mattermost-server/jobs"
 	"github.com/mattermost/mattermost-server/mlog"
@@ -64,6 +65,7 @@ func New(options ...AppOption) *App {
 func (a *App) Shutdown() {
 	a.Srv.Shutdown()
 	a.Srv = nil
+	config.DisableFileWatch()
 }
 
 func (a *App) configOrLicenseListener() {

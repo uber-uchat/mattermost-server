@@ -8,7 +8,10 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	//"regexp"
+	//"io/ioutil"
 
+	"github.com/mattermost/mattermost-server/config"
 	"github.com/mattermost/mattermost-server/mlog"
 	"github.com/mattermost/mattermost-server/model"
 	"github.com/mattermost/mattermost-server/plugin"
@@ -920,6 +923,9 @@ func (a *App) addUserToChannel(user *model.User, channel *model.Channel, teamMem
 		if len(nonMembers) > 0 {
 			return nil, model.NewAppError("addUserToChannel", "api.channel.add_members.user_denied", map[string]interface{}{"UserIDs": nonMembers}, "", http.StatusBadRequest)
 		}
+
+	if !config.IsMemberAllowedToJoin(channel, user, a.Config()) {
+		return nil, model.NewAppError("AddUserToChannel", "api.channel.add_user.to.channel.failed.not_allowed.app_error", nil, "", http.StatusBadRequest)
 	}
 
 	newMember := &model.ChannelMember{
@@ -1447,6 +1453,9 @@ func (a *App) JoinChannel(channel *model.Channel, userId string) *model.AppError
 }
 
 func (a *App) postJoinChannelMessage(user *model.User, channel *model.Channel) *model.AppError {
+	if config.IsReadOnlyChannel(channel, a.Config()) {
+		return nil
+	}
 	post := &model.Post{
 		ChannelId: channel.Id,
 		Message:   fmt.Sprintf(utils.T("api.channel.join_channel.post_and_forget"), user.Username),
@@ -1529,7 +1538,9 @@ func (a *App) LeaveChannel(channelId string, userId string) *model.AppError {
 		return err
 	}
 
-	if channel.Name == model.DEFAULT_CHANNEL && !*a.Config().ServiceSettings.ExperimentalEnableDefaultChannelLeaveJoinMessages {
+	if (channel.Name == model.DEFAULT_CHANNEL &&
+		!*a.Config().ServiceSettings.ExperimentalEnableDefaultChannelLeaveJoinMessages) ||
+		config.IsReadOnlyChannel(channel, a.Config()) {
 		return nil
 	}
 
@@ -1541,6 +1552,9 @@ func (a *App) LeaveChannel(channelId string, userId string) *model.AppError {
 }
 
 func (a *App) postLeaveChannelMessage(user *model.User, channel *model.Channel) *model.AppError {
+	if config.IsReadOnlyChannel(channel, a.Config()) {
+		return nil
+	}
 	post := &model.Post{
 		ChannelId: channel.Id,
 		Message:   fmt.Sprintf(utils.T("api.channel.leave.left"), user.Username),
@@ -1603,6 +1617,9 @@ func (a *App) postAddToTeamMessage(user *model.User, addedUser *model.User, chan
 }
 
 func (a *App) postRemoveFromChannelMessage(removerUserId string, removedUser *model.User, channel *model.Channel) *model.AppError {
+	if config.IsReadOnlyChannel(channel, a.Config()) {
+		return nil
+	}
 	post := &model.Post{
 		ChannelId: channel.Id,
 		Message:   fmt.Sprintf(utils.T("api.channel.remove_member.removed"), removedUser.Username),

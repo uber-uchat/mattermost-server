@@ -113,7 +113,9 @@
         "ExperimentalHideTownSquareinLHS": false,
         "ExperimentalTownSquareIsReadOnly": false,
         "ExperimentalPrimaryTeam": "",
-        "ExperimentalDefaultChannels": ""
+        "ExperimentalDefaultChannels": "",
+        "ReadOnlyChannels": [],
+        "AllowedMembersFilePath": "allowed_members.json"
     },
     "DisplaySettings": {
         "CustomUrlSchemes": [],
