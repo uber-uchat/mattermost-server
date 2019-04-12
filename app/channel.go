@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"regexp"
 
 	"github.com/mattermost/mattermost-server/mlog"
 	"github.com/mattermost/mattermost-server/model"
@@ -761,6 +762,27 @@ func (a *App) DeleteChannel(channel *model.Channel, userId string) *model.AppErr
 	return nil
 }
 
+func (a *App) isMemberAllowedToJoin(channel *model.Channel, user *model.User) bool {
+	isReadOnlyChannel := false
+
+	for _, channelName := range a.Config().TeamSettings.ReadOnlyChannels {
+		if channel.Name == channelName {
+			isReadOnlyChannel = true
+		}
+	}
+
+	isAllowedToJoin := true
+
+	if isReadOnlyChannel {
+		isAllowedToJoin, _ = regexp.MatchString("\\w+@uber.com", user.Email)
+	}
+
+	mlog.Error(":::::::::::::")
+	mlog.Error(":::::DM debug:isMemberAllowedToJoin:", mlog.Any("isReadOnlyChannel", isReadOnlyChannel), mlog.Any("isAllowedToJoin", isAllowedToJoin))
+
+	return isAllowedToJoin
+}
+
 func (a *App) addUserToChannel(user *model.User, channel *model.Channel, teamMember *model.TeamMember) (*model.ChannelMember, *model.AppError) {
 	if channel.Type != model.CHANNEL_OPEN && channel.Type != model.CHANNEL_PRIVATE {
 		return nil, model.NewAppError("AddUserToChannel", "api.channel.add_user_to_channel.type.app_error", nil, "", http.StatusBadRequest)
@@ -775,6 +797,10 @@ func (a *App) addUserToChannel(user *model.User, channel *model.Channel, teamMem
 	} else {
 		channelMember := result.Data.(*model.ChannelMember)
 		return channelMember, nil
+	}
+
+	if !a.isMemberAllowedToJoin(channel, user) {
+		return nil, model.NewAppError("AddUserToChannel", "api.channel.add_user.to.channel.failed.app_error", nil, "", http.StatusBadRequest)
 	}
 
 	newMember := &model.ChannelMember{
@@ -1208,6 +1234,7 @@ func (a *App) GetChannelUnread(channelId, userId string) (*model.ChannelUnread, 
 }
 
 func (a *App) JoinChannel(channel *model.Channel, userId string) *model.AppError {
+
 	userChan := a.Srv.Store.User().Get(userId)
 	memberChan := a.Srv.Store.Channel().GetMember(channel.Id, userId)
 
