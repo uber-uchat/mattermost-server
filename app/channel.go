@@ -8,7 +8,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
-	"regexp"
+	//"regexp"
+	//"io/ioutil"
 
 	"github.com/mattermost/mattermost-server/mlog"
 	"github.com/mattermost/mattermost-server/model"
@@ -761,8 +762,8 @@ func (a *App) DeleteChannel(channel *model.Channel, userId string) *model.AppErr
 
 	return nil
 }
-
-func (a *App) isMemberAllowedToJoin(channel *model.Channel, user *model.User) bool {
+/*
+func (a *App) IsMemberAllowedToJoin(channel *model.Channel, user *model.User) bool {
 	isReadOnlyChannel := false
 
 	for _, channelName := range a.Config().TeamSettings.ReadOnlyChannels {
@@ -775,6 +776,18 @@ func (a *App) isMemberAllowedToJoin(channel *model.Channel, user *model.User) bo
 
 	if isReadOnlyChannel {
 		isAllowedToJoin, _ = regexp.MatchString("\\w+@uber.com", user.Email)
+		if isAllowedToJoin {
+			filePath := *a.Config().TeamSettings.AllowedMembersFilePath
+			if a.Config().TeamSettings.AllowedMembersFilePath != nil && len(filePath) > 0 {
+				if file := utils.FindConfigFile(filePath); file != "" {
+					if data, err := ioutil.ReadFile(file); err == nil {
+						isAllowedToJoin = strings.Contains(string(data), fmt.Sprintf(",%s,", user.Username))
+						mlog.Error(":::::::::::::")
+						mlog.Error(":::::DM debug:isMemberAllowedToJoin:Processed file:", mlog.Any("isAllowedToJoin", isAllowedToJoin), mlog.Any("user.Username", user.Username))
+					}
+				}
+			}
+		}
 	}
 
 	mlog.Error(":::::::::::::")
@@ -782,7 +795,7 @@ func (a *App) isMemberAllowedToJoin(channel *model.Channel, user *model.User) bo
 
 	return isAllowedToJoin
 }
-
+*/
 func (a *App) addUserToChannel(user *model.User, channel *model.Channel, teamMember *model.TeamMember) (*model.ChannelMember, *model.AppError) {
 	if channel.Type != model.CHANNEL_OPEN && channel.Type != model.CHANNEL_PRIVATE {
 		return nil, model.NewAppError("AddUserToChannel", "api.channel.add_user_to_channel.type.app_error", nil, "", http.StatusBadRequest)
@@ -799,7 +812,7 @@ func (a *App) addUserToChannel(user *model.User, channel *model.Channel, teamMem
 		return channelMember, nil
 	}
 
-	if !a.isMemberAllowedToJoin(channel, user) {
+	if !utils.IsMemberAllowedToJoin(channel, user, a.Config()) {
 		return nil, model.NewAppError("AddUserToChannel", "api.channel.add_user.to.channel.failed.app_error", nil, "", http.StatusBadRequest)
 	}
 

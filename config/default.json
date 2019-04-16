@@ -107,7 +107,8 @@
         "ExperimentalTownSquareIsReadOnly": false,
         "ExperimentalPrimaryTeam": "",
         "ExperimentalDefaultChannels": "",
-        "ReadOnlyChannels": []
+        "ReadOnlyChannels": [],
+        "AllowedMembersFilePath": "allowed_members.json"
     },
     "DisplaySettings": {
         "CustomUrlSchemes": [],
