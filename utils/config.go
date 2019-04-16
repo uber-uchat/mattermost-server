@@ -649,7 +649,6 @@ func GenerateClientConfig(c *model.Config, diagnosticId string, license *model.L
 	props["AllowCustomThemes"] = strconv.FormatBool(*c.ThemeSettings.AllowCustomThemes)
 	props["AllowedThemes"] = strings.Join(c.ThemeSettings.AllowedThemes, ",")
 
-
 	if license != nil {
 		props["ExperimentalHideTownSquareinLHS"] = strconv.FormatBool(*c.TeamSettings.ExperimentalHideTownSquareinLHS)
 		props["ExperimentalTownSquareIsReadOnly"] = strconv.FormatBool(*c.TeamSettings.ExperimentalTownSquareIsReadOnly)

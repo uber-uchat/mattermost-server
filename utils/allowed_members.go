@@ -5,13 +5,15 @@ package utils
 
 import (
 	"fmt"
-	"strings"
-	"regexp"
 	"io/ioutil"
+	"regexp"
+	"strings"
 
-	"github.com/mattermost/mattermost-server/mlog"
+	// "github.com/mattermost/mattermost-server/mlog"
 	"github.com/mattermost/mattermost-server/model"
 )
+
+var allowedMembers = ""
 
 func IsMemberAllowedToJoin(channel *model.Channel, user *model.User, config *model.Config) bool {
 	isReadOnlyChannel := false
@@ -27,21 +29,23 @@ func IsMemberAllowedToJoin(channel *model.Channel, user *model.User, config *mod
 	if isReadOnlyChannel {
 		isAllowedToJoin, _ = regexp.MatchString("\\w+@uber.com", user.Email)
 		if isAllowedToJoin {
+			//if allowedMembers == "" {
 			filePath := *config.TeamSettings.AllowedMembersFilePath
 			if config.TeamSettings.AllowedMembersFilePath != nil && len(filePath) > 0 {
 				if file := FindConfigFile(filePath); file != "" {
 					if data, err := ioutil.ReadFile(file); err == nil {
-						isAllowedToJoin = strings.Contains(string(data), fmt.Sprintf(",%s,", user.Username))
-						mlog.Error(":::::::::::::")
-						mlog.Error(":::::DM debug:isMemberAllowedToJoin:Processed file:", mlog.Any("isAllowedToJoin", isAllowedToJoin), mlog.Any("user.Username", user.Username))
+						allowedMembers = string(data)
+						// mlog.Error(":::::::::::::")
+						// mlog.Error(":::::DM debug::Processing file:", mlog.Any("allowedMembers", allowedMembers))
 					}
 				}
 			}
+			//}
+			isAllowedToJoin = strings.Contains(allowedMembers, fmt.Sprintf(",%s,", user.Username))
+			// mlog.Error(":::::::::::::")
+			// mlog.Error(":::::DM debug:isMemberAllowedToJoin:string ready:", mlog.Any("isAllowedToJoin", isAllowedToJoin), mlog.Any("user.Username", user.Username))
 		}
 	}
-
-	mlog.Error(":::::::::::::")
-	mlog.Error(":::::DM debug:isMemberAllowedToJoin:", mlog.Any("isReadOnlyChannel", isReadOnlyChannel), mlog.Any("isAllowedToJoin", isAllowedToJoin))
 
 	return isAllowedToJoin
 }

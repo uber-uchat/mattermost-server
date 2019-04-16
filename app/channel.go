@@ -762,40 +762,7 @@ func (a *App) DeleteChannel(channel *model.Channel, userId string) *model.AppErr
 
 	return nil
 }
-/*
-func (a *App) IsMemberAllowedToJoin(channel *model.Channel, user *model.User) bool {
-	isReadOnlyChannel := false
 
-	for _, channelName := range a.Config().TeamSettings.ReadOnlyChannels {
-		if channel.Name == channelName {
-			isReadOnlyChannel = true
-		}
-	}
-
-	isAllowedToJoin := true
-
-	if isReadOnlyChannel {
-		isAllowedToJoin, _ = regexp.MatchString("\\w+@uber.com", user.Email)
-		if isAllowedToJoin {
-			filePath := *a.Config().TeamSettings.AllowedMembersFilePath
-			if a.Config().TeamSettings.AllowedMembersFilePath != nil && len(filePath) > 0 {
-				if file := utils.FindConfigFile(filePath); file != "" {
-					if data, err := ioutil.ReadFile(file); err == nil {
-						isAllowedToJoin = strings.Contains(string(data), fmt.Sprintf(",%s,", user.Username))
-						mlog.Error(":::::::::::::")
-						mlog.Error(":::::DM debug:isMemberAllowedToJoin:Processed file:", mlog.Any("isAllowedToJoin", isAllowedToJoin), mlog.Any("user.Username", user.Username))
-					}
-				}
-			}
-		}
-	}
-
-	mlog.Error(":::::::::::::")
-	mlog.Error(":::::DM debug:isMemberAllowedToJoin:", mlog.Any("isReadOnlyChannel", isReadOnlyChannel), mlog.Any("isAllowedToJoin", isAllowedToJoin))
-
-	return isAllowedToJoin
-}
-*/
 func (a *App) addUserToChannel(user *model.User, channel *model.Channel, teamMember *model.TeamMember) (*model.ChannelMember, *model.AppError) {
 	if channel.Type != model.CHANNEL_OPEN && channel.Type != model.CHANNEL_PRIVATE {
 		return nil, model.NewAppError("AddUserToChannel", "api.channel.add_user_to_channel.type.app_error", nil, "", http.StatusBadRequest)
