@@ -1006,6 +1006,21 @@ func (s *EmailSettings) SetDefaults() {
 	}
 }
 
+type ExtensionSettings struct {
+	EnableExperimentalExtensions *bool
+	AllowedExtensionsIDs         []string
+}
+
+func (s *ExtensionSettings) SetDefaults() {
+	if s.EnableExperimentalExtensions == nil {
+		s.EnableExperimentalExtensions = NewBool(false)
+	}
+
+	if s.AllowedExtensionsIDs == nil {
+		s.AllowedExtensionsIDs = []string{}
+	}
+}
+
 type RateLimitSettings struct {
 	Enable           *bool
 	PerSec           *int
@@ -2013,6 +2028,7 @@ type Config struct {
 	PasswordSettings      PasswordSettings
 	FileSettings          FileSettings
 	EmailSettings         EmailSettings
+	ExtensionSettings     ExtensionSettings
 	RateLimitSettings     RateLimitSettings
 	PrivacySettings       PrivacySettings
 	SupportSettings       SupportSettings
@@ -2109,6 +2125,7 @@ func (o *Config) SetDefaults() {
 	o.MessageExportSettings.SetDefaults()
 	o.TimezoneSettings.SetDefaults()
 	o.DisplaySettings.SetDefaults()
+	o.ExtensionSettings.SetDefaults()
 	o.ImageProxySettings.SetDefaults(o.ServiceSettings)
 }
 

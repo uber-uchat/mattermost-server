@@ -22,6 +22,7 @@ const (
 	TRACK_CONFIG_SQL                = "config_sql"
 	TRACK_CONFIG_LOG                = "config_log"
 	TRACK_CONFIG_FILE               = "config_file"
+	TRACK_CONFIG_EXTENSION          = "config_extension"
 	TRACK_CONFIG_RATE               = "config_rate"
 	TRACK_CONFIG_EMAIL              = "config_email"
 	TRACK_CONFIG_PRIVACY            = "config_privacy"
@@ -394,6 +395,10 @@ func (a *App) trackConfig() {
 		"isdefault_login_button_color":         isDefault(*cfg.EmailSettings.LoginButtonColor, ""),
 		"isdefault_login_button_border_color":  isDefault(*cfg.EmailSettings.LoginButtonBorderColor, ""),
 		"isdefault_login_button_text_color":    isDefault(*cfg.EmailSettings.LoginButtonTextColor, ""),
+	})
+
+	a.SendDiagnostic(TRACK_CONFIG_EXTENSION, map[string]interface{}{
+		"enable_experimental_extensions": *cfg.ExtensionSettings.EnableExperimentalExtensions,
 	})
 
 	a.SendDiagnostic(TRACK_CONFIG_RATE, map[string]interface{}{
