@@ -217,6 +217,10 @@
         "LoginButtonBorderColor": "#2389D7",
         "LoginButtonTextColor": "#2389D7"
     },
+    "ExtensionSettings": {
+        "EnableExperimentalExtensions": false,
+        "AllowedExtensionsIDs": []
+    },
     "RateLimitSettings": {
         "Enable": false,
         "PerSec": 10,
