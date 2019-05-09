@@ -551,10 +551,12 @@ func saveIsPinnedPost(c *Context, w http.ResponseWriter, r *http.Request, isPinn
 		return
 	}
 
-	if c.App.License() != nil &&
+	if (c.App.License() != nil &&
 		*c.App.Config().TeamSettings.ExperimentalTownSquareIsReadOnly &&
 		channel.Name == model.DEFAULT_CHANNEL &&
-		!c.App.RolesGrantPermission(user.GetRoles(), model.PERMISSION_MANAGE_SYSTEM.Id) {
+		!c.App.RolesGrantPermission(user.GetRoles(), model.PERMISSION_MANAGE_SYSTEM.Id)) ||
+		(utils.IsReadOnlyChannel(channel, c.App.Config()) &&
+			!c.App.RolesGrantPermission(user.GetRoles(), model.PERMISSION_MANAGE_SYSTEM.Id)) {
 		c.Err = model.NewAppError("saveIsPinnedPost", "api.post.save_is_pinned_post.town_square_read_only", nil, "", http.StatusForbidden)
 		return
 	}
