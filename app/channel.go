@@ -1363,8 +1363,8 @@ func (a *App) LeaveChannel(channelId string, userId string) *model.AppError {
 	}
 
 	if (channel.Name == model.DEFAULT_CHANNEL &&
-			!*a.Config().ServiceSettings.ExperimentalEnableDefaultChannelLeaveJoinMessages) ||
-			utils.IsReadOnlyChannel(channel, a.Config()) {
+		!*a.Config().ServiceSettings.ExperimentalEnableDefaultChannelLeaveJoinMessages) ||
+		utils.IsReadOnlyChannel(channel, a.Config()) {
 		return nil
 	}
 
