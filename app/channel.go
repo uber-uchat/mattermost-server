@@ -1288,6 +1288,9 @@ func (a *App) JoinChannel(channel *model.Channel, userId string) *model.AppError
 }
 
 func (a *App) postJoinChannelMessage(user *model.User, channel *model.Channel) *model.AppError {
+	if utils.IsReadOnlyChannel(channel, a.Config()) {
+		return nil
+	}
 	post := &model.Post{
 		ChannelId: channel.Id,
 		Message:   fmt.Sprintf(utils.T("api.channel.join_channel.post_and_forget"), user.Username),
@@ -1359,7 +1362,9 @@ func (a *App) LeaveChannel(channelId string, userId string) *model.AppError {
 		return err
 	}
 
-	if channel.Name == model.DEFAULT_CHANNEL && !*a.Config().ServiceSettings.ExperimentalEnableDefaultChannelLeaveJoinMessages {
+	if (channel.Name == model.DEFAULT_CHANNEL &&
+			!*a.Config().ServiceSettings.ExperimentalEnableDefaultChannelLeaveJoinMessages) ||
+			utils.IsReadOnlyChannel(channel, a.Config()) {
 		return nil
 	}
 
@@ -1371,6 +1376,9 @@ func (a *App) LeaveChannel(channelId string, userId string) *model.AppError {
 }
 
 func (a *App) postLeaveChannelMessage(user *model.User, channel *model.Channel) *model.AppError {
+	if utils.IsReadOnlyChannel(channel, a.Config()) {
+		return nil
+	}
 	post := &model.Post{
 		ChannelId: channel.Id,
 		Message:   fmt.Sprintf(utils.T("api.channel.leave.left"), user.Username),
@@ -1433,6 +1441,9 @@ func (a *App) postAddToTeamMessage(user *model.User, addedUser *model.User, chan
 }
 
 func (a *App) postRemoveFromChannelMessage(removerUserId string, removedUser *model.User, channel *model.Channel) *model.AppError {
+	if utils.IsReadOnlyChannel(channel, a.Config()) {
+		return nil
+	}
 	post := &model.Post{
 		ChannelId: channel.Id,
 		Message:   fmt.Sprintf(utils.T("api.channel.remove_member.removed"), removedUser.Username),

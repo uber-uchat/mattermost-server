@@ -19,14 +19,17 @@ import (
 var allowedMembers = ""
 var configWatcher *ConfigWatcher
 
-func IsMemberAllowedToJoin(channel *model.Channel, user *model.User, config *model.Config) bool {
-	isReadOnlyChannel := false
-
+func IsReadOnlyChannel(channel *model.Channel, config *model.Config) bool {
 	for _, channelName := range config.TeamSettings.ReadOnlyChannels {
 		if channel.Name == channelName {
-			isReadOnlyChannel = true
+			return true
 		}
 	}
+	return false
+}
+
+func IsMemberAllowedToJoin(channel *model.Channel, user *model.User, config *model.Config) bool {
+	isReadOnlyChannel := IsReadOnlyChannel(channel, config)
 
 	isAllowedToJoin := true
 
