@@ -1738,6 +1738,7 @@ type ElasticsearchSettings struct {
 	LiveIndexingBatchSize         *int
 	BulkIndexingTimeWindowSeconds *int
 	RequestTimeoutSeconds         *int
+	Trace                         *string
 }
 
 func (s *ElasticsearchSettings) SetDefaults() {
@@ -1795,6 +1796,10 @@ func (s *ElasticsearchSettings) SetDefaults() {
 
 	if s.RequestTimeoutSeconds == nil {
 		s.RequestTimeoutSeconds = NewInt(ELASTICSEARCH_SETTINGS_DEFAULT_REQUEST_TIMEOUT_SECONDS)
+	}
+
+	if s.Trace == nil {
+		s.Trace = NewString("")
 	}
 }
 
