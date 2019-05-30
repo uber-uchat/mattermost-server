@@ -2016,6 +2016,7 @@ type ElasticsearchSettings struct {
 	BulkIndexingTimeWindowSeconds *int    `restricted:"true"`
 	RequestTimeoutSeconds         *int    `restricted:"true"`
 	SkipTLSVerification           *bool   `restricted:"true"`
+	Trace                         *string `restricted:"true"`
 }
 
 func (s *ElasticsearchSettings) SetDefaults() {
@@ -2097,6 +2098,11 @@ func (s *ElasticsearchSettings) SetDefaults() {
 
 	if s.SkipTLSVerification == nil {
 		s.SkipTLSVerification = NewBool(false)
+	}
+
+	if s.Trace == nil {
+		s.Trace = NewString("")
+
 	}
 }
 
