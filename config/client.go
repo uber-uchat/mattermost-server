@@ -76,6 +76,7 @@ func GenerateClientConfig(c *model.Config, diagnosticId string, license *model.L
 	props["GfycatApiKey"] = *c.ServiceSettings.GfycatApiKey
 	props["GfycatApiSecret"] = *c.ServiceSettings.GfycatApiSecret
 	props["MaxFileSize"] = strconv.FormatInt(*c.FileSettings.MaxFileSize, 10)
+	props["ShowOutOfOfficeInStatusDropdown"] = strconv.FormatBool(*c.ServiceSettings.ShowOutOfOfficeInStatusDropdown)
 
 	props["MaxNotificationsPerChannel"] = strconv.FormatInt(*c.TeamSettings.MaxNotificationsPerChannel, 10)
 	props["EnableConfirmNotificationsToChannel"] = strconv.FormatBool(*c.TeamSettings.EnableConfirmNotificationsToChannel)
