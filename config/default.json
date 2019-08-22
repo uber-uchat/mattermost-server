@@ -81,7 +81,8 @@
         "ExperimentalStrictCSRFEnforcement": false,
         "EnableBotAccountCreation": false,
         "DisableBotsWhenOwnerIsDeactivated": true,
-        "EnableSVGs": false
+        "EnableSVGs": false,
+        "ShowOutOfOfficeInStatusDropdown": false
     },
     "TeamSettings": {
         "SiteName": "Mattermost",
