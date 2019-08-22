@@ -296,6 +296,7 @@ type ServiceSettings struct {
 	DisableBotsWhenOwnerIsDeactivated                 *bool `restricted:"true"`
 	EnableBotAccountCreation                          *bool
 	EnableSVGs                                        *bool
+	ShowOutOfOfficeInStatusDropdown                   *bool
 }
 
 func (s *ServiceSettings) SetDefaults() {
@@ -649,6 +650,10 @@ func (s *ServiceSettings) SetDefaults() {
 
 	if s.EnableSVGs == nil {
 		s.EnableSVGs = NewBool(true)
+	}
+
+	if s.ShowOutOfOfficeInStatusDropdown == nil {
+		s.ShowOutOfOfficeInStatusDropdown = NewBool(false)
 	}
 }
 
