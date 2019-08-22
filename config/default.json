@@ -77,7 +77,8 @@
         "DisableLegacyMFA": true,
         "EnableEmailInvitations": false,
         "ExperimentalLdapGroupSync": false,
-        "ExperimentalStrictCSRFEnforcement": false
+        "ExperimentalStrictCSRFEnforcement": false,
+        "ShowOutOfOfficeInStatusDropdown": false
     },
     "TeamSettings": {
         "SiteName": "Mattermost",
