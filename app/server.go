@@ -37,6 +37,7 @@ import (
 )
 
 var MaxNotificationsPerChannelDefault int64 = 1000000
+var OutOfOfficeRequestHandlerInterval time.Duration = time.Minute * 30
 
 type Server struct {
 	Store           store.Store
@@ -252,6 +253,11 @@ func NewServer(options ...Option) (*Server, error) {
 			runCommandWebhookCleanupJob(s)
 		})
 
+		if *s.Config().TeamSettings.ExperimentalEnableAutomaticReplies {
+			s.Go(func() {
+				runOutOfOfficeRequestHandler(s)
+			})
+		}
 		if complianceI := s.Compliance; complianceI != nil {
 			complianceI.StartComplianceDailyJob()
 		}
@@ -596,6 +602,13 @@ func (a *App) OriginChecker() func(*http.Request) bool {
 		return utils.OriginChecker(allowed)
 	}
 	return nil
+}
+
+func runOutOfOfficeRequestHandler(s *Server) {
+	s.FakeApp().DoOutOfOfficeRequestHandle()
+	model.CreateRecurringTask("Out Of Office Request Handler", func() {
+		s.FakeApp().DoOutOfOfficeRequestHandle()
+	}, OutOfOfficeRequestHandlerInterval)
 }
 
 func runSecurityJob(s *Server) {
