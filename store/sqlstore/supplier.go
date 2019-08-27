@@ -99,6 +99,7 @@ type SqlSupplierOldStores struct {
 	group                store.GroupStore
 	UserTermsOfService   store.UserTermsOfServiceStore
 	linkMetadata         store.LinkMetadataStore
+	oooRequest           store.OooRequestStore
 }
 
 type SqlSupplier struct {
@@ -151,6 +152,7 @@ func NewSqlSupplier(settings model.SqlSettings, metrics einterfaces.MetricsInter
 	supplier.oldStores.TermsOfService = NewSqlTermsOfServiceStore(supplier, metrics)
 	supplier.oldStores.UserTermsOfService = NewSqlUserTermsOfServiceStore(supplier)
 	supplier.oldStores.linkMetadata = NewSqlLinkMetadataStore(supplier)
+	supplier.oldStores.oooRequest = NewSqlOooRequestStore(supplier)
 
 	initSqlSupplierReactions(supplier)
 	initSqlSupplierRoles(supplier)
@@ -196,6 +198,7 @@ func NewSqlSupplier(settings model.SqlSettings, metrics einterfaces.MetricsInter
 	supplier.oldStores.TermsOfService.(SqlTermsOfServiceStore).CreateIndexesIfNotExists()
 	supplier.oldStores.UserTermsOfService.(SqlUserTermsOfServiceStore).CreateIndexesIfNotExists()
 	supplier.oldStores.linkMetadata.(*SqlLinkMetadataStore).CreateIndexesIfNotExists()
+	supplier.oldStores.oooRequest.(*SqlOooRequestStore).CreateIndexesIfNotExists()
 
 	supplier.CreateIndexesIfNotExistsGroups()
 
@@ -1051,6 +1054,10 @@ func (ss *SqlSupplier) Group() store.GroupStore {
 
 func (ss *SqlSupplier) LinkMetadata() store.LinkMetadataStore {
 	return ss.oldStores.linkMetadata
+}
+
+func (ss *SqlSupplier) OooRequestUser() store.OooRequestStore {
+	return ss.oldStores.oooRequest
 }
 
 func (ss *SqlSupplier) DropAllTables() {
