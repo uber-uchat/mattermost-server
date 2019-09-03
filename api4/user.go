@@ -746,6 +746,63 @@ func updateUser(c *Context, w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(ruser.ToJson()))
 }
 
+func DelayedAutoResponderStatusChange(ruser *model.User) bool {
+
+	if ruser.NotifyProps[model.AUTO_RESPONDER_ACTIVE_NOTIFY_PROP] == "false" {
+		return false
+	}
+
+	fromDate := ruser.NotifyProps["fromDate"]
+	fromTime := ruser.NotifyProps["fromTime"]
+	toDate := ruser.NotifyProps["toDate"]
+	toTime := ruser.NotifyProps["toTime"]
+
+	var from time.Time
+	if fromDate == "" {
+		from = time.Now()
+	} else {
+		from, _ = time.Parse("2006-1-2", fromDate)
+	}
+
+	var to time.Time
+	if toDate != "" {
+		to, _ = time.Parse("2006-1-2", toDate)
+	} else {
+		to = from.AddDate(200, 0, 0)
+	}
+
+	now := time.Now().UTC()
+	offset, _ := strconv.Atoi(ruser.NotifyProps["offset"])
+
+	startDateMillis := model.GetStartOfDayMillis(from, offset)
+	if fromTime != "" {
+		fTime, _ := time.Parse("3:04 PM", fromTime)
+		h := fTime.Hour()
+		m := fTime.Minute()
+		startDateMillis = startDateMillis + (int64(time.Hour/time.Millisecond))*int64(h)
+		startDateMillis = startDateMillis + (int64(time.Minute/time.Millisecond))*int64(m)
+	}
+
+	endDateMillis := model.GetStartOfDayMillis(to, offset)
+	if toTime != "" {
+		tTime, _ := time.Parse("3:04 PM", toTime)
+		h := tTime.Hour()
+		m := tTime.Minute()
+		endDateMillis = endDateMillis + (int64(time.Hour/time.Millisecond))*int64(h)
+		endDateMillis = endDateMillis + (int64(time.Minute/time.Millisecond))*int64(m)
+	} else {
+		endDateMillis = model.GetEndOfDayMillis(to, offset)
+	}
+
+	presentTimeMillis := model.GetMillisForTime(now)
+
+	if presentTimeMillis >= startDateMillis && presentTimeMillis <= endDateMillis {
+		return false
+	}
+
+	return true
+}
+
 func patchUser(c *Context, w http.ResponseWriter, r *http.Request) {
 	c.RequireUserId()
 	if c.Err != nil {
@@ -796,12 +853,22 @@ func patchUser(c *Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	ruser, err := c.App.PatchUser(c.Params.UserId, patch, c.IsSystemAdmin())
+
 	if err != nil {
 		c.Err = err
 		return
 	}
 
-	c.App.SetAutoResponderStatus(ruser, ouser.NotifyProps)
+	delayedUpdate := DelayedAutoResponderStatusChange(ruser)
+	if !delayedUpdate {
+		c.App.SetAutoResponderStatus(ruser, ouser.NotifyProps)
+	}
+
+	err = c.App.UpdateOooRequestUser(c.Params.UserId, ruser, delayedUpdate)
+	if err != nil {
+		c.SetInvalidParam("user")
+		return
+	}
 	c.LogAudit("")
 	w.Write([]byte(ruser.ToJson()))
 }

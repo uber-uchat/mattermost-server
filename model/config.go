@@ -294,6 +294,7 @@ type ServiceSettings struct {
 	ExperimentalLdapGroupSync                         *bool
 	DisableBotsWhenOwnerIsDeactivated                 *bool `restricted:"true"`
 	ShowOutOfOfficeInStatusDropdown                   *bool
+	EnableOutOfOfficeDatePicker                       *bool
 }
 
 func (s *ServiceSettings) SetDefaults() {
@@ -639,6 +640,10 @@ func (s *ServiceSettings) SetDefaults() {
 
 	if s.ShowOutOfOfficeInStatusDropdown == nil {
 		s.ShowOutOfOfficeInStatusDropdown = NewBool(false)
+	}
+
+	if s.EnableOutOfOfficeDatePicker == nil {
+		s.EnableOutOfOfficeDatePicker = NewBool(false)
 	}
 }
 
