@@ -78,7 +78,8 @@
         "EnableEmailInvitations": false,
         "ExperimentalLdapGroupSync": false,
         "ExperimentalStrictCSRFEnforcement": false,
-        "ShowOutOfOfficeInStatusDropdown": false
+        "ShowOutOfOfficeInStatusDropdown": false,
+        "EnableOutOfOfficeDatePicker": false
     },
     "TeamSettings": {
         "SiteName": "Mattermost",
