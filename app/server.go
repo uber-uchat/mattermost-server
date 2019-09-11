@@ -37,7 +37,7 @@ import (
 )
 
 var MaxNotificationsPerChannelDefault int64 = 1000000
-var OutOfOfficeRequestHandlerInterval time.Duration = time.Minute * 1
+var OutOfOfficeRequestHandlerInterval time.Duration = time.Minute * 30
 
 type Server struct {
 	Store           store.Store

@@ -84,20 +84,12 @@ func (a *App) UpdateOooRequestUser(userId string, user *model.User, delayedUpdat
 
 	startDateMillis := model.GetStartOfDayMillis(fromDate, offset)
 	if fromTime != "" {
-		fTime, _ := time.Parse("3:04 PM", fromTime)
-		h := fTime.Hour()
-		m := fTime.Minute()
-		startDateMillis = startDateMillis + (int64(time.Hour/time.Millisecond))*int64(h)
-		startDateMillis = startDateMillis + (int64(time.Minute/time.Millisecond))*int64(m)
+		startDateMillis = AddTimeMillis(fromTime, startDateMillis)
 	}
 
 	endDateMillis := model.GetStartOfDayMillis(toDate, offset)
 	if toTime != "" {
-		tTime, _ := time.Parse("3:04 PM", toTime)
-		h := tTime.Hour()
-		m := tTime.Minute()
-		endDateMillis = endDateMillis + (int64(time.Hour/time.Millisecond))*int64(h)
-		endDateMillis = endDateMillis + (int64(time.Minute/time.Millisecond))*int64(m)
+		endDateMillis = AddTimeMillis(toTime, endDateMillis)
 	} else {
 		endDateMillis = model.GetEndOfDayMillis(toDate, offset)
 	}
@@ -119,6 +111,15 @@ func (a *App) UpdateOooRequestUser(userId string, user *model.User, delayedUpdat
 		return err
 	}
 	return nil
+}
+
+func AddTimeMillis(timeString string, dateMillis int64) int64 {
+	fTime, _ := time.Parse("3:04 PM", timeString)
+	h := fTime.Hour()
+	m := fTime.Minute()
+	dateMillis = dateMillis + (int64(time.Hour / time.Millisecond))*int64(h)
+	dateMillis = dateMillis + (int64(time.Minute / time.Millisecond))*int64(m)
+	return dateMillis
 }
 
 func (a *App) DoOutOfOfficeRequestHandle() {
