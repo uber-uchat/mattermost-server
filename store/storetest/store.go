@@ -50,7 +50,7 @@ type Store struct {
 	GroupStore                mocks.GroupStore
 	UserTermsOfServiceStore   mocks.UserTermsOfServiceStore
 	LinkMetadataStore         mocks.LinkMetadataStore
-	OooRequestStore 		  mocks.OooRequestStore
+	OooRequestStore           mocks.OooRequestStore
 }
 
 func (s *Store) Team() store.TeamStore                             { return &s.TeamStore }

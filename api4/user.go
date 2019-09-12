@@ -750,8 +750,8 @@ func AddTimeMillis(timeString string, dateMillis int64) int64 {
 	fTime, _ := time.Parse("3:04 PM", timeString)
 	h := fTime.Hour()
 	m := fTime.Minute()
-	dateMillis = dateMillis + (int64(time.Hour / time.Millisecond))*int64(h)
-	dateMillis = dateMillis + (int64(time.Minute / time.Millisecond))*int64(m)
+	dateMillis = dateMillis + (int64(time.Hour/time.Millisecond))*int64(h)
+	dateMillis = dateMillis + (int64(time.Minute/time.Millisecond))*int64(m)
 	return dateMillis
 }
 

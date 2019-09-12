@@ -1,3 +1,6 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See License.txt for license information.
+
 package app
 
 import (
@@ -19,7 +22,14 @@ func (a *App) GetOooRequestUser(userId string) (*model.OooUser, *model.AppError)
 }
 
 func (a *App) InsertOooRequestUser(userId string, createAt, deleteAt int64, requestNotifyProps, timezone model.StringMap) *model.AppError {
-	newUser := &model.OooUser{userId, createAt, deleteAt, requestNotifyProps, timezone}
+	newUser := &model.OooUser{
+		UserId:             userId,
+		CreateAt:           createAt,
+		DeleteAt:           deleteAt,
+		RequestNotifyProps: requestNotifyProps,
+		Timezone:           timezone,
+	}
+  
 	result := <-a.Srv.Store.OooRequestUser().Save(newUser)
 	if result.Err != nil {
 		return result.Err
@@ -99,9 +109,10 @@ func (a *App) UpdateOooRequestUser(userId string, user *model.User, delayedUpdat
 			a.SetStatusOnline(userId, true)
 			a.DisableAutoResponder(userId, false)
 		}
-		err := a.Update(userId, startDateMillis, endDateMillis, user.NotifyProps)
-		if err != nil {
-			return err
+
+		err1 := a.Update(userId, startDateMillis, endDateMillis, user.NotifyProps)
+		if err1 != nil {
+			return err1
 		}
 		return nil
 	}
@@ -117,8 +128,8 @@ func AddTimeMillis(timeString string, dateMillis int64) int64 {
 	fTime, _ := time.Parse("3:04 PM", timeString)
 	h := fTime.Hour()
 	m := fTime.Minute()
-	dateMillis = dateMillis + (int64(time.Hour / time.Millisecond))*int64(h)
-	dateMillis = dateMillis + (int64(time.Minute / time.Millisecond))*int64(m)
+	dateMillis = dateMillis + (int64(time.Hour/time.Millisecond))*int64(h)
+	dateMillis = dateMillis + (int64(time.Minute/time.Millisecond))*int64(m)
 	return dateMillis
 }
 
