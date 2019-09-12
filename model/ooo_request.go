@@ -15,17 +15,6 @@ type OooUser struct {
 	Timezone           StringMap `json:"timezone"`
 }
 
-// PreSave will set the Id and Username if missing.  It will also fill
-// in the CreateAt, UpdateAt times.  It will also hash the password.  It should
-// be run before saving the user to the db.
-func (u *OooUser) PreSave() {
-	//u.CreateAt = GetMillis()
-
-	if u.Timezone == nil {
-		u.Timezone = timezones.DefaultUserTimezone()
-	}
-}
-
 func (u *OooUser) IsValid() *AppError {
 	if len(u.UserId) != 26 {
 		return InvalidUserError("id", "")
@@ -36,4 +25,12 @@ func (u *OooUser) IsValid() *AppError {
 	}
 
 	return nil
+}
+
+func (u *OooUser) PreSave() {
+	u.CreateAt = GetMillis()
+
+	if u.Timezone == nil {
+		u.Timezone = timezones.DefaultUserTimezone()
+	}
 }
