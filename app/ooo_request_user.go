@@ -29,7 +29,7 @@ func (a *App) InsertOooRequestUser(userId string, createAt, deleteAt int64, requ
 		RequestNotifyProps: requestNotifyProps,
 		Timezone:           timezone,
 	}
-
+  
 	result := <-a.Srv.Store.OooRequestUser().Save(newUser)
 	if result.Err != nil {
 		return result.Err
@@ -109,6 +109,7 @@ func (a *App) UpdateOooRequestUser(userId string, user *model.User, delayedUpdat
 			a.SetStatusOnline(userId, true)
 			a.DisableAutoResponder(userId, false)
 		}
+
 		err1 := a.Update(userId, startDateMillis, endDateMillis, user.NotifyProps)
 		if err1 != nil {
 			return err1
