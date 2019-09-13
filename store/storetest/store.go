@@ -50,6 +50,7 @@ type Store struct {
 	GroupStore                mocks.GroupStore
 	UserTermsOfServiceStore   mocks.UserTermsOfServiceStore
 	LinkMetadataStore         mocks.LinkMetadataStore
+	OooRequestStore           mocks.OooRequestStore
 }
 
 func (s *Store) Team() store.TeamStore                             { return &s.TeamStore }
@@ -80,6 +81,7 @@ func (s *Store) Role() store.RoleStore                             { return &s.R
 func (s *Store) Scheme() store.SchemeStore                         { return &s.SchemeStore }
 func (s *Store) TermsOfService() store.TermsOfServiceStore         { return &s.TermsOfServiceStore }
 func (s *Store) UserTermsOfService() store.UserTermsOfServiceStore { return &s.UserTermsOfServiceStore }
+func (s *Store) OooRequestUser() store.OooRequestStore             { return &s.OooRequestStore }
 func (s *Store) ChannelMemberHistory() store.ChannelMemberHistoryStore {
 	return &s.ChannelMemberHistoryStore
 }
@@ -123,5 +125,6 @@ func (s *Store) AssertExpectations(t mock.TestingT) bool {
 		&s.PluginStore,
 		&s.RoleStore,
 		&s.SchemeStore,
+		&s.OooRequestStore,
 	)
 }

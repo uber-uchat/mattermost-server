@@ -70,6 +70,7 @@ type Store interface {
 	Group() GroupStore
 	UserTermsOfService() UserTermsOfServiceStore
 	LinkMetadata() LinkMetadataStore
+	OooRequestUser() OooRequestStore
 	MarkSystemRanUnitTests()
 	Close()
 	LockToMaster()
@@ -618,4 +619,14 @@ type ChannelSearchOpts struct {
 	NotAssociatedToGroup string
 	IncludeDeleted       bool
 	ExcludeChannelNames  []string
+}
+
+type OooRequestStore interface {
+	Save(user *model.OooUser) StoreChannel
+	Update(userId string, newStartDate, newEndDate int64, RequestNotifyProps model.StringMap) StoreChannel
+	Get(id string) StoreChannel
+	GetAllBefore(time int64) StoreChannel
+	GetAllExpiredBefore(time int64) StoreChannel
+	PermanentDelete(userId string) StoreChannel
+	PermanentDeleteBefore(time int64) StoreChannel
 }

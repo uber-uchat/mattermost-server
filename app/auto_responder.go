@@ -16,7 +16,12 @@ func (a *App) SendAutoResponse(channel *model.Channel, receiver *model.User) {
 	active := receiver.NotifyProps[model.AUTO_RESPONDER_ACTIVE_NOTIFY_PROP] == "true"
 	message := receiver.NotifyProps[model.AUTO_RESPONDER_MESSAGE_NOTIFY_PROP]
 
-	if active && message != "" {
+	status, err := a.GetStatus(receiver.Id)
+	if err != nil {
+		status = &model.Status{UserId: receiver.Id, Status: model.STATUS_OUT_OF_OFFICE, Manual: false, LastActivityAt: model.GetMillis(), ActiveChannel: ""}
+	}
+
+	if active && message != "" && status.Status == model.STATUS_OUT_OF_OFFICE {
 		autoResponderPost := &model.Post{
 			ChannelId: channel.Id,
 			Message:   message,
@@ -53,11 +58,14 @@ func (a *App) DisableAutoResponder(userId string, asAdmin bool) *model.AppError 
 	}
 
 	active := user.NotifyProps[model.AUTO_RESPONDER_ACTIVE_NOTIFY_PROP] == "true"
-
 	if active {
 		patch := &model.UserPatch{}
 		patch.NotifyProps = user.NotifyProps
 		patch.NotifyProps[model.AUTO_RESPONDER_ACTIVE_NOTIFY_PROP] = "false"
+		patch.NotifyProps["fromDate"] = ""
+		patch.NotifyProps["toDate"] = ""
+		patch.NotifyProps["fromTime"] = ""
+		patch.NotifyProps["toTime"] = ""
 
 		_, err := a.PatchUser(userId, patch, asAdmin)
 		if err != nil {
