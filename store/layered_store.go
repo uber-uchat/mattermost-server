@@ -87,6 +87,10 @@ func (s *LayeredStore) User() UserStore {
 	return s.DatabaseLayer.User()
 }
 
+func (ss *LayeredStore) OooRequestUser() OooRequestStore {
+	return ss.DatabaseLayer.OooRequestUser()
+}
+
 func (s *LayeredStore) Bot() BotStore {
 	return s.DatabaseLayer.Bot()
 }

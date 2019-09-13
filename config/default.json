@@ -82,7 +82,9 @@
         "EnableBotAccountCreation": false,
         "DisableBotsWhenOwnerIsDeactivated": true,
         "EnableSVGs": false,
-        "ShowOutOfOfficeInStatusDropdown": false
+        "ExperimentalStrictCSRFEnforcement": false,
+        "ShowOutOfOfficeInStatusDropdown": false,
+        "EnableOutOfOfficeDatePicker": false
     },
     "TeamSettings": {
         "SiteName": "Mattermost",
