@@ -574,3 +574,19 @@ func (_m *Store) Webhook() store.WebhookStore {
 
 	return r0
 }
+
+// OooRequestUser provides a mock function with given fields:
+func (_m *Store) OooRequestUser() store.OooRequestStore {
+	ret := _m.Called()
+
+	var r0 store.OooRequestStore
+	if rf, ok := ret.Get(0).(func() store.OooRequestStore); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(store.OooRequestStore)
+		}
+	}
+
+	return r0
+}
