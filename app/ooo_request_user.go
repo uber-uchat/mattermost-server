@@ -168,6 +168,7 @@ func (a *App) DoOutOfOfficeRequestHandle() {
 				a.SetStatusOutOfOffice(user.UserId)
 			} else {
 				result := <-a.Srv.Store.OooRequestUser().PermanentDelete(user.UserId)
+				a.DisableAutoResponder(user.UserId, false)
 				if result.Err != nil {
 					mlog.Error(fmt.Sprintf("Failed to delete OOO status for user_id=%v, err=%v", user.UserId, result.Err), mlog.String("user_id", user.UserId))
 				}

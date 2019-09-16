@@ -75,15 +75,22 @@ func (a *App) DisableAutoResponder(userId string, asAdmin bool) *model.AppError 
 		return err
 	}
 
+	props := user.NotifyProps
+	props[model.AUTO_RESPONDER_FROM_DATE] = ""
+	props[model.AUTO_RESPONDER_FROM_TIME] = ""
+	props[model.AUTO_RESPONDER_TO_DATE] = ""
+	props[model.AUTO_RESPONDER_TO_TIME] = ""
+
+	user, err = a.UpdateUserNotifyProps(userId, props)
+	if err != nil {
+		return err
+	}
+
 	active := user.NotifyProps[model.AUTO_RESPONDER_ACTIVE_NOTIFY_PROP] == "true"
 	if active {
 		patch := &model.UserPatch{}
 		patch.NotifyProps = user.NotifyProps
 		patch.NotifyProps[model.AUTO_RESPONDER_ACTIVE_NOTIFY_PROP] = "false"
-		patch.NotifyProps[model.AUTO_RESPONDER_FROM_DATE] = ""
-		patch.NotifyProps[model.AUTO_RESPONDER_FROM_TIME] = ""
-		patch.NotifyProps[model.AUTO_RESPONDER_TO_DATE] = ""
-		patch.NotifyProps[model.AUTO_RESPONDER_TO_TIME] = ""
 
 		_, err := a.PatchUser(userId, patch, asAdmin)
 		if err != nil {

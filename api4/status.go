@@ -84,6 +84,11 @@ func updateUserStatus(c *Context, w http.ResponseWriter, r *http.Request) {
 		c.App.DisableAutoResponder(c.Params.UserId, c.IsSystemAdmin())
 	}
 
+	user, err := c.App.GetUser(c.Params.UserId)
+	if err == nil && user.NotifyProps[model.AUTO_RESPONDER_ACTIVE_NOTIFY_PROP] == "true" {
+		c.App.DisableAutoResponder(c.Params.UserId, c.IsSystemAdmin())
+	}
+
 	switch status.Status {
 	case "online":
 		c.App.SetStatusOnline(c.Params.UserId, true)
