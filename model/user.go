@@ -427,6 +427,23 @@ func (u *User) Patch(patch *UserPatch) {
 	}
 
 	if patch.NotifyProps != nil {
+		props := [7]string{
+			AUTO_RESPONDER_ACTIVE_NOTIFY_PROP,
+			AUTO_RESPONDER_MESSAGE_NOTIFY_PROP,
+			AUTO_RESPONDER_TO_DATE,
+			AUTO_RESPONDER_TO_TIME,
+			AUTO_RESPONDER_FROM_DATE,
+			AUTO_RESPONDER_FROM_TIME,
+		}
+
+		for _, prop := range props {
+			if _, ok := patch.NotifyProps[prop]; !ok {
+				if val, ok := u.NotifyProps[prop]; ok {
+					patch.NotifyProps[prop] = val
+				}
+			}
+		}
+
 		u.NotifyProps = patch.NotifyProps
 	}
 
