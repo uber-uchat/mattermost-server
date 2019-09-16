@@ -678,6 +678,7 @@ func UpgradeDatabaseToVersion511(sqlStore SqlStore) {
 
 		saveSchemaVersion(sqlStore, VERSION_5_11_0)
 	}
+
 }
 
 func UpgradeDatabaseToVersion512(sqlStore SqlStore) {
@@ -700,6 +701,8 @@ func UpgradeDatabaseToVersion513(sqlStore SqlStore) {
 		// The previous jobs ran once per minute, cluttering the Jobs table with somewhat useless entries. Clean that up.
 		sqlStore.GetMaster().Exec("DELETE FROM Jobs WHERE Type = 'plugins'")
 
+		// Add a column for handling consolidation of OOO replies
+		sqlStore.CreateColumnIfNotExists("ChannelMembers", "LastAutoReplyPostAt", "bigint(20)", "bigint", "0")
 		saveSchemaVersion(sqlStore, VERSION_5_13_0)
 	}
 }

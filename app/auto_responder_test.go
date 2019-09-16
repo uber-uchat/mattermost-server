@@ -93,6 +93,20 @@ func TestSendAutoResponseSuccess(t *testing.T) {
 
 	userUpdated1, err := th.App.PatchUser(user.Id, patch, true)
 	require.Nil(t, err)
+	err = th.App.InsertOooRequestUser(user.Id, 1, 1, map[string]string{}, map[string]string{})
+	require.Nil(t, err)
+	th.App.SetStatusOutOfOffice(user.Id)
+
+	user = th.CreateUser()
+	defer th.App.PermanentDeleteUser(user)
+
+	patch = &model.UserPatch{}
+	userUpdated2, err := th.App.PatchUser(user.Id, patch, true)
+	require.Nil(t, err)
+	_, err = th.App.AddTeamMember(th.BasicTeam.Id, userUpdated2.Id)
+	require.Nil(t, err)
+	_, err = th.App.AddUserToChannel(userUpdated2, th.BasicChannel)
+	require.Nil(t, err)
 
 	th.App.CreatePost(&model.Post{
 		ChannelId: th.BasicChannel.Id,
@@ -101,7 +115,7 @@ func TestSendAutoResponseSuccess(t *testing.T) {
 		th.BasicChannel,
 		false)
 
-	th.App.SendAutoResponse(th.BasicChannel, userUpdated1)
+	th.App.SendAutoResponse(th.BasicChannel, userUpdated1, userUpdated2)
 
 	if list, err := th.App.GetPosts(th.BasicChannel.Id, 0, 1); err != nil {
 		require.Nil(t, err)
@@ -131,6 +145,17 @@ func TestSendAutoResponseFailure(t *testing.T) {
 	userUpdated1, err := th.App.PatchUser(user.Id, patch, true)
 	require.Nil(t, err)
 
+	user = th.CreateUser()
+	defer th.App.PermanentDeleteUser(user)
+
+	patch = &model.UserPatch{}
+	userUpdated2, err := th.App.PatchUser(user.Id, patch, true)
+	require.Nil(t, err)
+
+	_, err = th.App.AddTeamMember(th.BasicTeam.Id, userUpdated2.Id)
+	require.Nil(t, err)
+	_, err = th.App.AddUserToChannel(userUpdated2, th.BasicChannel)
+	require.Nil(t, err)
 	th.App.CreatePost(&model.Post{
 		ChannelId: th.BasicChannel.Id,
 		Message:   "zz" + model.NewId() + "a",
@@ -138,7 +163,7 @@ func TestSendAutoResponseFailure(t *testing.T) {
 		th.BasicChannel,
 		false)
 
-	th.App.SendAutoResponse(th.BasicChannel, userUpdated1)
+	th.App.SendAutoResponse(th.BasicChannel, userUpdated1, userUpdated2)
 
 	if list, err := th.App.GetPosts(th.BasicChannel.Id, 0, 1); err != nil {
 		require.Nil(t, err)

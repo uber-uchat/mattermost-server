@@ -74,7 +74,6 @@ func TestCreateIncomingWebhook(t *testing.T) {
 	CheckNotImplementedStatus(t, resp)
 }
 
-
 func TestCreateIncomingWebhook_BypassTeamPermissions(t *testing.T) {
 	th := Setup().InitBasic()
 	defer th.TearDown()
@@ -96,7 +95,7 @@ func TestCreateIncomingWebhook_BypassTeamPermissions(t *testing.T) {
 
 	require.Equal(t, rhook.ChannelId, hook.ChannelId)
 	require.Equal(t, rhook.UserId, th.BasicUser.Id)
-	require.Equal(t, rhook.TeamId,th.BasicTeam.Id)
+	require.Equal(t, rhook.TeamId, th.BasicTeam.Id)
 
 	team := th.CreateTeam()
 	team.AllowOpenInvite = false
@@ -695,7 +694,7 @@ func TestUpdateIncomingWebhook_BypassTeamPermissions(t *testing.T) {
 
 	require.Equal(t, rhook.ChannelId, hook.ChannelId)
 	require.Equal(t, rhook.UserId, th.BasicUser.Id)
-	require.Equal(t, rhook.TeamId,th.BasicTeam.Id)
+	require.Equal(t, rhook.TeamId, th.BasicTeam.Id)
 
 	team := th.CreateTeam()
 	team.AllowOpenInvite = false
@@ -922,7 +921,7 @@ func TestUpdateOutgoingWebhook_BypassTeamPermissions(t *testing.T) {
 	CheckNoError(t, resp)
 
 	require.Equal(t, rhook.ChannelId, hook.ChannelId)
-	require.Equal(t, rhook.TeamId,th.BasicTeam.Id)
+	require.Equal(t, rhook.TeamId, th.BasicTeam.Id)
 
 	team := th.CreateTeam()
 	team.AllowOpenInvite = false
