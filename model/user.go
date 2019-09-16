@@ -39,6 +39,10 @@ const (
 	FIRST_NAME_NOTIFY_PROP             = "first_name"
 	AUTO_RESPONDER_ACTIVE_NOTIFY_PROP  = "auto_responder_active"
 	AUTO_RESPONDER_MESSAGE_NOTIFY_PROP = "auto_responder_message"
+	FromDate                           = "fromDate"
+	FromTime                           = "fromTime"
+	ToDate                             = "toDate"
+	ToTime                             = "toTime"
 
 	DEFAULT_LOCALE          = "en"
 	USER_AUTH_SERVICE_EMAIL = "email"

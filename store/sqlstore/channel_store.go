@@ -41,32 +41,34 @@ type SqlChannelStore struct {
 }
 
 type channelMember struct {
-	ChannelId    string
-	UserId       string
-	Roles        string
-	LastViewedAt int64
-	MsgCount     int64
-	MentionCount int64
-	NotifyProps  model.StringMap
-	LastUpdateAt int64
-	SchemeGuest  sql.NullBool
-	SchemeUser   sql.NullBool
-	SchemeAdmin  sql.NullBool
+	ChannelId           string
+	UserId              string
+	Roles               string
+	LastViewedAt        int64
+	MsgCount            int64
+	MentionCount        int64
+	NotifyProps         model.StringMap
+	LastUpdateAt        int64
+	SchemeGuest         sql.NullBool
+	SchemeUser          sql.NullBool
+	SchemeAdmin         sql.NullBool
+	LastAutoReplyPostAt int64
 }
 
 func NewChannelMemberFromModel(cm *model.ChannelMember) *channelMember {
 	return &channelMember{
-		ChannelId:    cm.ChannelId,
-		UserId:       cm.UserId,
-		Roles:        cm.ExplicitRoles,
-		LastViewedAt: cm.LastViewedAt,
-		MsgCount:     cm.MsgCount,
-		MentionCount: cm.MentionCount,
-		NotifyProps:  cm.NotifyProps,
-		LastUpdateAt: cm.LastUpdateAt,
-		SchemeGuest:  sql.NullBool{Valid: true, Bool: cm.SchemeGuest},
-		SchemeUser:   sql.NullBool{Valid: true, Bool: cm.SchemeUser},
-		SchemeAdmin:  sql.NullBool{Valid: true, Bool: cm.SchemeAdmin},
+		ChannelId:           cm.ChannelId,
+		UserId:              cm.UserId,
+		Roles:               cm.ExplicitRoles,
+		LastViewedAt:        cm.LastViewedAt,
+		MsgCount:            cm.MsgCount,
+		MentionCount:        cm.MentionCount,
+		NotifyProps:         cm.NotifyProps,
+		LastUpdateAt:        cm.LastUpdateAt,
+		LastAutoReplyPostAt: cm.LastAutoReplyPostAt,
+		SchemeGuest:         sql.NullBool{Valid: true, Bool: cm.SchemeGuest},
+		SchemeUser:          sql.NullBool{Valid: true, Bool: cm.SchemeUser},
+		SchemeAdmin:         sql.NullBool{Valid: true, Bool: cm.SchemeAdmin},
 	}
 }
 
@@ -83,6 +85,7 @@ type channelMemberWithSchemeRoles struct {
 	SchemeUser                    sql.NullBool
 	SchemeAdmin                   sql.NullBool
 	TeamSchemeDefaultGuestRole    sql.NullString
+	LastAutoReplyPostAt           int64
 	TeamSchemeDefaultUserRole     sql.NullString
 	TeamSchemeDefaultAdminRole    sql.NullString
 	ChannelSchemeDefaultGuestRole sql.NullString
@@ -166,18 +169,19 @@ func (db channelMemberWithSchemeRoles) ToModel() *model.ChannelMember {
 	}
 
 	return &model.ChannelMember{
-		ChannelId:     db.ChannelId,
-		UserId:        db.UserId,
-		Roles:         strings.Join(roles, " "),
-		LastViewedAt:  db.LastViewedAt,
-		MsgCount:      db.MsgCount,
-		MentionCount:  db.MentionCount,
-		NotifyProps:   db.NotifyProps,
-		LastUpdateAt:  db.LastUpdateAt,
-		SchemeAdmin:   schemeAdmin,
-		SchemeUser:    schemeUser,
-		SchemeGuest:   schemeGuest,
-		ExplicitRoles: strings.Join(explicitRoles, " "),
+		ChannelId:           db.ChannelId,
+		UserId:              db.UserId,
+		Roles:               strings.Join(roles, " "),
+		LastViewedAt:        db.LastViewedAt,
+		MsgCount:            db.MsgCount,
+		MentionCount:        db.MentionCount,
+		NotifyProps:         db.NotifyProps,
+		LastUpdateAt:        db.LastUpdateAt,
+		LastAutoReplyPostAt: db.LastAutoReplyPostAt,
+		SchemeAdmin:         schemeAdmin,
+		SchemeUser:          schemeUser,
+		SchemeGuest:         schemeGuest,
+		ExplicitRoles:       strings.Join(explicitRoles, " "),
 	}
 }
 
