@@ -74,20 +74,20 @@ func (a *App) UpdateOooRequestUser(userId string, user *model.User, delayedUpdat
 	}
 
 	var fromDate time.Time
-	if user.NotifyProps["fromDate"] == "" {
+	if user.NotifyProps[model.FROM_DATE] == "" {
 		fromDate = time.Now()
 	} else {
-		fromDate, _ = time.Parse("2006-1-2", user.NotifyProps["fromDate"])
+		fromDate, _ = time.Parse("2006-1-2", user.NotifyProps[model.FROM_DATE])
 	}
 
-	fromTime := user.NotifyProps["fromTime"]
-	toTime := user.NotifyProps["toTime"]
+	fromTime := user.NotifyProps[model.FROM_TIME]
+	toTime := user.NotifyProps[model.TO_TIME]
 
 	var toDate time.Time
-	if user.NotifyProps["toDate"] == "" {
+	if user.NotifyProps[model.TO_DATE] == "" {
 		toDate = fromDate.AddDate(200, 0, 0)
 	} else {
-		toDate, _ = time.Parse("2006-1-2", user.NotifyProps["toDate"])
+		toDate, _ = time.Parse("2006-1-2", user.NotifyProps[model.TO_DATE])
 	}
 
 	offset, _ := strconv.Atoi(user.NotifyProps["offset"])
@@ -108,6 +108,10 @@ func (a *App) UpdateOooRequestUser(userId string, user *model.User, delayedUpdat
 		if delayedUpdate && status.Status == model.STATUS_OUT_OF_OFFICE {
 			a.SetStatusOnline(userId, true)
 			a.DisableAutoResponder(userId, false)
+		}
+
+		if !delayedUpdate {
+			startDateMillis = model.GetMillis()
 		}
 		err1 := a.Update(userId, startDateMillis, endDateMillis, user.NotifyProps)
 		if err1 != nil {

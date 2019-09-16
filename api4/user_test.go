@@ -4179,7 +4179,6 @@ func TestLoginErrorMessage(t *testing.T) {
 	_, resp := th.Client.Logout()
 	CheckNoError(t, resp)
 
-
 	// Email and Username enabled
 	th.App.UpdateConfig(func(cfg *model.Config) {
 		*cfg.EmailSettings.EnableSignInWithEmail = true

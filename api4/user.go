@@ -864,10 +864,10 @@ func DelayedAutoResponderStatusChange(ruser *model.User) bool {
 		return false
 	}
 
-	fromDate := ruser.NotifyProps["fromDate"]
-	fromTime := ruser.NotifyProps["fromTime"]
-	toDate := ruser.NotifyProps["toDate"]
-	toTime := ruser.NotifyProps["toTime"]
+	fromDate := ruser.NotifyProps[model.FROM_DATE]
+	fromTime := ruser.NotifyProps[model.FROM_TIME]
+	toDate := ruser.NotifyProps[model.TO_DATE]
+	toTime := ruser.NotifyProps[model.TO_TIME]
 
 	var from time.Time
 	if fromDate == "" {
