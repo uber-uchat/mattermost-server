@@ -32,18 +32,19 @@ type ChannelUnread struct {
 }
 
 type ChannelMember struct {
-	ChannelId     string    `json:"channel_id"`
-	UserId        string    `json:"user_id"`
-	Roles         string    `json:"roles"`
-	LastViewedAt  int64     `json:"last_viewed_at"`
-	MsgCount      int64     `json:"msg_count"`
-	MentionCount  int64     `json:"mention_count"`
-	NotifyProps   StringMap `json:"notify_props"`
-	LastUpdateAt  int64     `json:"last_update_at"`
-	SchemeGuest   bool      `json:"scheme_guest"`
-	SchemeUser    bool      `json:"scheme_user"`
-	SchemeAdmin   bool      `json:"scheme_admin"`
-	ExplicitRoles string    `json:"explicit_roles"`
+	ChannelId           string    `json:"channel_id"`
+	UserId              string    `json:"user_id"`
+	Roles               string    `json:"roles"`
+	LastViewedAt        int64     `json:"last_viewed_at"`
+	MsgCount            int64     `json:"msg_count"`
+	MentionCount        int64     `json:"mention_count"`
+	NotifyProps         StringMap `json:"notify_props"`
+	LastUpdateAt        int64     `json:"last_update_at"`
+	SchemeGuest         bool      `json:"scheme_guest"`
+	SchemeUser          bool      `json:"scheme_user"`
+	SchemeAdmin         bool      `json:"scheme_admin"`
+	ExplicitRoles       string    `json:"explicit_roles"`
+	LastAutoReplyPostAt int64     `json:"last_auto_reply_post_at"`
 }
 
 type ChannelMembers []ChannelMember
