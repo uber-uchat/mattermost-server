@@ -80,10 +80,6 @@ func (a *App) DisableAutoResponder(userId string, asAdmin bool) *model.AppError 
 		patch := &model.UserPatch{}
 		patch.NotifyProps = user.NotifyProps
 		patch.NotifyProps[model.AUTO_RESPONDER_ACTIVE_NOTIFY_PROP] = "false"
-		patch.NotifyProps[model.AUTO_RESPONDER_FROM_DATE] = ""
-		patch.NotifyProps[model.AUTO_RESPONDER_FROM_TIME] = ""
-		patch.NotifyProps[model.AUTO_RESPONDER_TO_DATE] = ""
-		patch.NotifyProps[model.AUTO_RESPONDER_TO_TIME] = ""
 
 		_, err := a.PatchUser(userId, patch, asAdmin)
 		if err != nil {
