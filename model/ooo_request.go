@@ -28,8 +28,6 @@ func (u *OooUser) IsValid() *AppError {
 }
 
 func (u *OooUser) PreSave() {
-	u.CreateAt = GetMillis()
-
 	if u.Timezone == nil {
 		u.Timezone = timezones.DefaultUserTimezone()
 	}
