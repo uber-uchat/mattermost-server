@@ -17,17 +17,23 @@ func (a *App) SendAutoResponse(channel *model.Channel, receiver, sender *model.U
 
 	status, err := a.GetStatus(receiver.Id)
 	if err != nil {
-		status = &model.Status{UserId: receiver.Id, Status: model.STATUS_OUT_OF_OFFICE, Manual: false, LastActivityAt: model.GetMillis(), ActiveChannel: ""}
+		status = &model.Status{UserId: receiver.Id, Status: model.STATUS_ONLINE, Manual: false, LastActivityAt: model.GetMillis(), ActiveChannel: ""}
 	}
 
+	if status.Status != model.STATUS_OUT_OF_OFFICE {
+		return
+	}
+	
 	channelMember, err := a.Srv.Store.Channel().GetMember(channel.Id, sender.Id)
 	if err != nil {
 		mlog.Error(err.Error())
+		return
 	}
 
 	result := <-a.Srv.Store.OooRequestUser().Get(receiver.Id)
 	if result.Err != nil {
 		mlog.Error(result.Err.Error())
+		return
 	}
 	oooUser := result.Data.(*model.OooUser)
 
