@@ -8,20 +8,36 @@ import (
 	"github.com/mattermost/mattermost-server/model"
 )
 
-func (a *App) SendAutoResponse(channel *model.Channel, receiver *model.User) {
+func (a *App) SendAutoResponse(channel *model.Channel, receiver, sender *model.User) {
 	if receiver == nil || receiver.NotifyProps == nil {
 		return
 	}
-
 	active := receiver.NotifyProps[model.AUTO_RESPONDER_ACTIVE_NOTIFY_PROP] == "true"
 	message := receiver.NotifyProps[model.AUTO_RESPONDER_MESSAGE_NOTIFY_PROP]
 
 	status, err := a.GetStatus(receiver.Id)
 	if err != nil {
-		status = &model.Status{UserId: receiver.Id, Status: model.STATUS_OUT_OF_OFFICE, Manual: false, LastActivityAt: model.GetMillis(), ActiveChannel: ""}
+		status = &model.Status{UserId: receiver.Id, Status: model.STATUS_ONLINE, Manual: false, LastActivityAt: model.GetMillis(), ActiveChannel: ""}
 	}
 
-	if active && message != "" && status.Status == model.STATUS_OUT_OF_OFFICE {
+	if status.Status != model.STATUS_OUT_OF_OFFICE {
+		return
+	}
+	
+	channelMember, err := a.Srv.Store.Channel().GetMember(channel.Id, sender.Id)
+	if err != nil {
+		mlog.Error(err.Error())
+		return
+	}
+
+	result := <-a.Srv.Store.OooRequestUser().Get(receiver.Id)
+	if result.Err != nil {
+		mlog.Error(result.Err.Error())
+		return
+	}
+	oooUser := result.Data.(*model.OooUser)
+
+	if active && message != "" && status.Status == model.STATUS_OUT_OF_OFFICE && (channelMember.LastAutoReplyPostAt < oooUser.CreateAt || channelMember.LastAutoReplyPostAt > oooUser.DeleteAt) {
 		autoResponderPost := &model.Post{
 			ChannelId: channel.Id,
 			Message:   message,
@@ -34,6 +50,8 @@ func (a *App) SendAutoResponse(channel *model.Channel, receiver *model.User) {
 		if _, err := a.CreatePost(autoResponderPost, channel, false); err != nil {
 			mlog.Error(err.Error())
 		}
+		channelMember.LastAutoReplyPostAt = model.GetMillis()
+		result = <-a.Srv.Store.Channel().UpdateMember(channelMember)
 	}
 }
 
@@ -62,10 +80,10 @@ func (a *App) DisableAutoResponder(userId string, asAdmin bool) *model.AppError 
 		patch := &model.UserPatch{}
 		patch.NotifyProps = user.NotifyProps
 		patch.NotifyProps[model.AUTO_RESPONDER_ACTIVE_NOTIFY_PROP] = "false"
-		patch.NotifyProps["fromDate"] = ""
-		patch.NotifyProps["toDate"] = ""
-		patch.NotifyProps["fromTime"] = ""
-		patch.NotifyProps["toTime"] = ""
+		patch.NotifyProps[model.AUTO_RESPONDER_FROM_DATE] = ""
+		patch.NotifyProps[model.AUTO_RESPONDER_FROM_TIME] = ""
+		patch.NotifyProps[model.AUTO_RESPONDER_TO_DATE] = ""
+		patch.NotifyProps[model.AUTO_RESPONDER_TO_TIME] = ""
 
 		_, err := a.PatchUser(userId, patch, asAdmin)
 		if err != nil {
