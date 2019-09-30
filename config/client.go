@@ -89,6 +89,7 @@ func GenerateClientConfig(c *model.Config, diagnosticId string, license *model.L
 	props["RunJobs"] = strconv.FormatBool(*c.JobSettings.RunJobs)
 
 	props["EnableEmailInvitations"] = strconv.FormatBool(*c.ServiceSettings.EnableEmailInvitations)
+	props["EnableTelemetry"] = strconv.FormatBool(*c.ExperimentalSettings.EnableTelemetry)
 
 	// Set default values for all options that require a license.
 	props["ExperimentalHideTownSquareinLHS"] = "false"

@@ -6,6 +6,7 @@ package api4
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	"runtime"
 
@@ -38,6 +39,9 @@ func (api *API) InitSystem() {
 	api.BaseRoutes.ApiRoot.Handle("/redirect_location", api.ApiSessionRequiredTrustRequester(getRedirectLocation)).Methods("GET")
 
 	api.BaseRoutes.ApiRoot.Handle("/notifications/ack", api.ApiSessionRequired(pushNotificationAck)).Methods("POST")
+	api.BaseRoutes.ApiRoot.Handle("/telemetry/mobile", api.ApiSessionRequired(collectMobileTelemetry)).Methods("POST")
+
+	api.BaseRoutes.ApiRoot.Handle("/metrics", promhttp.Handler())
 }
 
 func getSystemPing(c *Context, w http.ResponseWriter, r *http.Request) {
@@ -331,6 +335,32 @@ func pushNotificationAck(c *Context, w http.ResponseWriter, r *http.Request) {
 	err := c.App.SendAckToPushProxy(ack)
 	if err != nil {
 		c.Err = model.NewAppError("pushNotificationAck", "api.push_notifications_ack.forward.app_error", nil, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	ReturnStatusOK(w)
+	return
+}
+
+func collectMobileTelemetry(c *Context, w http.ResponseWriter, r *http.Request) {
+	if *c.App.Config().ExperimentalSettings.EnableTelemetry == false {
+		w.WriteHeader(http.StatusForbidden)
+		c.Log.Error("Collection of telemetry is disabled.")
+		return
+	}
+
+	metrics := model.MobileMetricsFromJson(r.Body)
+
+	if metrics == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		c.Log.Error("Unable to parse mobile telemetry payload.")
+		return
+	}
+
+	err := c.App.Srv.ClientMetrics.CollectMobileMetrics(metrics)
+	if err != nil {
+		c.Log.Warn("Unable to collect mobile telemetry.", mlog.Err(err))
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 

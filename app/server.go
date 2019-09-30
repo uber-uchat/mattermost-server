@@ -124,6 +124,7 @@ type Server struct {
 	Ldap             einterfaces.LdapInterface
 	MessageExport    einterfaces.MessageExportInterface
 	Metrics          einterfaces.MetricsInterface
+	ClientMetrics    *utils.ClientMetrics
 	Saml             einterfaces.SamlInterface
 }
 
@@ -138,6 +139,7 @@ func NewServer(options ...Option) (*Server, error) {
 		seenPendingPostIdsCache: utils.NewLru(PENDING_POST_IDS_CACHE_SIZE),
 		clientConfig:            make(map[string]string),
 	}
+
 	for _, option := range options {
 		if err := option(s); err != nil {
 			return nil, errors.Wrap(err, "failed to apply option")
@@ -151,6 +153,10 @@ func NewServer(options ...Option) (*Server, error) {
 		}
 
 		s.configStore = configStore
+	}
+
+	if s.ClientMetrics == nil && *s.Config().ExperimentalSettings.EnableTelemetry == true {
+		s.ClientMetrics = utils.NewClientMetrics()
 	}
 
 	if s.Log == nil {

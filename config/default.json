@@ -384,7 +384,8 @@
         "DisablePostMetadata": false,
         "LinkMetadataTimeoutMilliseconds": 5000,
         "RestrictSystemAdmin": false,
-        "EnableClickToReply": false
+        "EnableClickToReply": false,
+        "EnableTelemetry": true
     },
     "AnalyticsSettings": {
         "MaxUsersForStatistics": 2500
