@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"sort"
 	"strings"
-	"sync"
 	"unicode"
 	"unicode/utf8"
 
@@ -106,23 +105,24 @@ func (a *App) SendNotifications(post *model.Post, team *model.Team, channel *mod
 
 		mentionedUserIds, hereNotification, channelNotification, allNotification = m.MentionedUserIds, m.HereMentioned, m.ChannelMentioned, m.AllMentioned
 
+		// Commenting the code to send Auto Responder on channel as we are getting auto reply on custom triggers also.
 		//send automatic replies for each mentioned users with Out Of Office status
-		if !hereNotification && !channelNotification && !allNotification {
-			a.Srv.Go(func() {
-				var wg sync.WaitGroup
-				wg.Add(len(mentionedUserIds))
-				for id := range mentionedUserIds {
-					go func(id string) {
-						defer wg.Done()
-						status, err := a.GetStatus(id)
-						if err == nil && status != nil && status.Status == model.STATUS_OUT_OF_OFFICE {
-							a.SendAutoResponse(channel, profileMap[id], profileMap[post.UserId])
-						}
-					}(id)
-				}
-				wg.Wait()
-			})
-		}
+		//if !hereNotification && !channelNotification && !allNotification {
+		//	a.Srv.Go(func() {
+		//		var wg sync.WaitGroup
+		//		wg.Add(len(mentionedUserIds))
+		//		for id := range mentionedUserIds {
+		//			go func(id string) {
+		//				defer wg.Done()
+		//				status, err := a.GetStatus(id)
+		//				if err == nil && status != nil && status.Status == model.STATUS_OUT_OF_OFFICE {
+		//					a.SendAutoResponse(channel, profileMap[id], profileMap[post.UserId])
+		//				}
+		//			}(id)
+		//		}
+		//		wg.Wait()
+		//	})
+		//}
 
 		// get users that have comment thread mentions enabled
 		if len(post.RootId) > 0 && parentPostList != nil {
