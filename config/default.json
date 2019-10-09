@@ -84,7 +84,8 @@
         "EnableSVGs": false,
         "ExperimentalStrictCSRFEnforcement": false,
         "ShowOutOfOfficeInStatusDropdown": false,
-        "EnableOutOfOfficeDatePicker": false
+        "EnableOutOfOfficeDatePicker": false,
+        "EnableEmailSendInChannel": false
     },
     "TeamSettings": {
         "SiteName": "Mattermost",

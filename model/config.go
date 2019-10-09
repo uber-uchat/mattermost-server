@@ -298,6 +298,7 @@ type ServiceSettings struct {
 	EnableSVGs                                        *bool
 	ShowOutOfOfficeInStatusDropdown                   *bool
 	EnableOutOfOfficeDatePicker                       *bool
+	EnableEmailSendInChannel                          *bool
 }
 
 func (s *ServiceSettings) SetDefaults() {
@@ -659,6 +660,10 @@ func (s *ServiceSettings) SetDefaults() {
 
 	if s.EnableOutOfOfficeDatePicker == nil {
 		s.EnableOutOfOfficeDatePicker = NewBool(false)
+	}
+
+	if s.EnableEmailSendInChannel == nil {
+		s.EnableEmailSendInChannel = NewBool(false)
 	}
 }
 
