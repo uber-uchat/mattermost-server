@@ -1139,3 +1139,19 @@ func (_m *ChannelStore) UserBelongsToChannels(userId string, channelIds []string
 
 	return r0
 }
+
+// GetChannelMembersEmails provides a mock function with given fields: channelId
+func (_m *ChannelStore) GetChannelMembersEmails(channelId string) store.StoreChannel {
+	ret := _m.Called(channelId)
+
+	var r0 store.StoreChannel
+	if rf, ok := ret.Get(0).(func(string) store.StoreChannel); ok {
+		r0 = rf(channelId)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(store.StoreChannel)
+		}
+	}
+
+	return r0
+}

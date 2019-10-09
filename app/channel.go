@@ -1329,6 +1329,21 @@ func (a *App) GetChannelMembersTimezones(channelId string) ([]string, *model.App
 	return model.RemoveDuplicateStrings(timezones), nil
 }
 
+func (a *App) GetChannelMembersEmails(channelId string) ([]string, *model.AppError) {
+	result := <-a.Srv.Store.Channel().GetChannelMembersEmails(channelId)
+	if result.Err != nil {
+		return nil, result.Err
+	}
+	var emails []string
+
+	members := result.Data.([]*model.ChannelMemberForExport)
+
+	for _, member := range members {
+		emails = append(emails, member.Username)
+	}
+	return emails, nil
+}
+
 func (a *App) GetChannelMembersByIds(channelId string, userIds []string) (*model.ChannelMembers, *model.AppError) {
 	result := <-a.Srv.Store.Channel().GetMembersByIds(channelId, userIds)
 	if result.Err != nil {

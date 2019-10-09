@@ -1442,6 +1442,27 @@ func (s SqlChannelStore) GetChannelMembersTimezones(channelId string) store.Stor
 	})
 }
 
+func (s SqlChannelStore) GetChannelMembersEmails(channelId string) store.StoreChannel {
+	return store.Do(func(result *store.StoreResult) {
+		var members []*model.ChannelMemberForExport
+		_, err := s.GetReplica().Select(&members, `
+					SELECT
+						Users.Email as UserName
+					FROM
+						ChannelMembers
+					LEFT JOIN
+						Users  ON ChannelMembers.UserId = Users.Id
+					WHERE ChannelId = :ChannelId
+		`, map[string]interface{}{
+			"ChannelId": channelId})
+		if err != nil {
+			result.Err = model.NewAppError("SqlChannelStore.GetChannelMembersEmails", "store.sql_channel.get_members.app_error", nil, "channel_id="+channelId+","+err.Error(), http.StatusInternalServerError)
+			return
+		}
+		result.Data = members
+	})
+}
+
 func (s SqlChannelStore) GetMember(channelId string, userId string) (*model.ChannelMember, *model.AppError) {
 	var dbMember channelMemberWithSchemeRoles
 

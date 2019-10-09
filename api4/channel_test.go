@@ -2715,3 +2715,38 @@ func TestGetChannelMembersTimezones(t *testing.T) {
 	}
 
 }
+
+func TestGetChannelMembersEmails(t *testing.T) {
+	th := Setup().InitBasic()
+	defer th.TearDown()
+	Client := th.Client
+	channel := th.CreatePrivateChannel()
+
+	emailIds, resp := Client.GetChannelMembersEmails(channel.Id)
+	CheckNoError(t, resp)
+
+	if emailIds == "error" {
+		t.Fatal("couldnt't get extra info")
+	} else if strings.Index(emailIds, "@") == -1 {
+		t.Fatal("got incorrect member emails")
+	}
+
+	_, resp = Client.GetChannelMembersEmails("junk")
+	CheckBadRequestStatus(t, resp)
+
+	_, resp = Client.GetChannelMembersEmails(model.NewId())
+	CheckForbiddenStatus(t, resp)
+
+	Client.Logout()
+	_, resp = Client.GetChannelMembersEmails(channel.Id)
+	CheckUnauthorizedStatus(t, resp)
+
+	th.LoginBasic2()
+
+	_, resp = Client.GetChannelMembersEmails(channel.Id)
+	CheckForbiddenStatus(t, resp)
+
+	_, resp = th.SystemAdminClient.GetChannelMembersEmails(channel.Id)
+	CheckNoError(t, resp)
+
+}

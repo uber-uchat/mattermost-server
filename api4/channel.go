@@ -5,6 +5,7 @@ package api4
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/mattermost/mattermost-server/mlog"
 	"github.com/mattermost/mattermost-server/model"
@@ -37,6 +38,7 @@ func (api *API) InitChannel() {
 	api.BaseRoutes.Channel.Handle("/stats", api.ApiSessionRequired(getChannelStats)).Methods("GET")
 	api.BaseRoutes.Channel.Handle("/pinned", api.ApiSessionRequired(getPinnedPosts)).Methods("GET")
 	api.BaseRoutes.Channel.Handle("/timezones", api.ApiSessionRequired(getChannelMembersTimezones)).Methods("GET")
+	api.BaseRoutes.Channel.Handle("/emails", api.ApiSessionRequired(getChannelMembersEmails)).Methods("GET")
 	api.BaseRoutes.ChannelForUser.Handle("/unread", api.ApiSessionRequired(getChannelUnread)).Methods("GET")
 
 	api.BaseRoutes.ChannelByName.Handle("", api.ApiSessionRequired(getChannelByName)).Methods("GET")
@@ -900,6 +902,26 @@ func getChannelMembersTimezones(c *Context, w http.ResponseWriter, r *http.Reque
 	}
 
 	w.Write([]byte(model.ArrayToJson(membersTimezones)))
+}
+
+func getChannelMembersEmails(c *Context, w http.ResponseWriter, r *http.Request) {
+	c.RequireChannelId()
+	if c.Err != nil {
+		return
+	}
+
+	if !c.App.SessionHasPermissionToChannel(c.App.Session, c.Params.ChannelId, model.PERMISSION_READ_CHANNEL) {
+		c.SetPermissionError(model.PERMISSION_READ_CHANNEL)
+		return
+	}
+
+	membersEmails, err := c.App.GetChannelMembersEmails(c.Params.ChannelId)
+	if err != nil {
+		c.Err = err
+		return
+	}
+
+	w.Write([]byte(model.StringToJson(strings.Join(membersEmails, ","))))
 }
 
 func getChannelMembersByIds(c *Context, w http.ResponseWriter, r *http.Request) {
