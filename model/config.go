@@ -1136,6 +1136,7 @@ type EmailSettings struct {
 	LoginButtonColor                  *string
 	LoginButtonBorderColor            *string
 	LoginButtonTextColor              *string
+	EnableCustomAlerts                *bool
 }
 
 func (s *EmailSettings) SetDefaults() {
@@ -1269,6 +1270,10 @@ func (s *EmailSettings) SetDefaults() {
 
 	if s.LoginButtonTextColor == nil {
 		s.LoginButtonTextColor = NewString("#2389D7")
+	}
+
+	if s.EnableCustomAlerts == nil {
+		s.EnableCustomAlerts = NewBool(true)
 	}
 }
 

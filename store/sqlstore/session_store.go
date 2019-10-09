@@ -149,6 +149,19 @@ func (me SqlSessionStore) GetSessionsWithActiveDeviceIds(userId string) store.St
 	})
 }
 
+func (me SqlSessionStore) GetAllSessionsWithActiveDeviceIds(limit int, offset int) store.StoreChannel {
+	return store.Do(func(result *store.StoreResult) {
+		var sessions []*model.Session
+
+		if _, err := me.GetReplica().Select(&sessions, "SELECT * FROM Sessions WHERE ExpiresAt != 0 AND :ExpiresAt <= ExpiresAt AND DeviceId != '' ORDER BY UserId LIMIT :Limit OFFSET :Offset ",
+			map[string]interface{}{"ExpiresAt": model.GetMillis(), "Limit": limit, "Offset": offset}); err != nil {
+			result.Err = model.NewAppError("SqlSessionStore.GetAllSessionsWithActiveDeviceIds", "store.sql_session.get_sessions.app_error", nil, err.Error(), http.StatusInternalServerError)
+		} else {
+			result.Data = sessions
+		}
+	})
+}
+
 func (me SqlSessionStore) Remove(sessionIdOrToken string) store.StoreChannel {
 	return store.Do(func(result *store.StoreResult) {
 		_, err := me.GetMaster().Exec("DELETE FROM Sessions WHERE Id = :Id Or Token = :Token", map[string]interface{}{"Id": sessionIdOrToken, "Token": sessionIdOrToken})

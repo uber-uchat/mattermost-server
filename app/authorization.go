@@ -252,3 +252,14 @@ func (a *App) SessionHasPermissionToManageBot(session model.Session, botUserId s
 
 	return nil
 }
+
+func (a *App) SessionHasPermissionToSendAlerts(session model.Session) bool {
+
+	mlog.Info(fmt.Sprintf("Checking if UserId: %v has permission to send custom alerts", a.Session.UserId))
+
+	if a.SessionHasPermissionTo(session, model.PERMISSION_MANAGE_JOBS) {
+		return true
+	}
+
+	return false
+}

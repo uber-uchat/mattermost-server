@@ -21,6 +21,7 @@ type NotificationType string
 
 const NOTIFICATION_TYPE_CLEAR NotificationType = "clear"
 const NOTIFICATION_TYPE_MESSAGE NotificationType = "message"
+const NOTIFICATION_TYPE_ALERT NotificationType = "alert"
 
 const PUSH_NOTIFICATION_HUB_WORKERS = 1000
 const PUSH_NOTIFICATIONS_HUB_BUFFER_PER_WORKER = 50
@@ -43,6 +44,8 @@ type PushNotification struct {
 	explicitMention    bool
 	channelWideMention bool
 	replyToThreadType  string
+	customMessage      *string
+	session            *model.Session
 }
 
 func (hub *PushNotificationsHub) GetGoChannelFromUserId(userId string) chan PushNotification {
@@ -56,7 +59,7 @@ func (a *App) sendPushNotificationSync(post *model.Post, user *model.User, chann
 	explicitMention, channelWideMention bool, replyToThreadType string) *model.AppError {
 	cfg := a.Config()
 
-	sessions, err := a.getMobileAppSessions(user.Id)
+	sessions, err := a.GetMobileAppSessions(user.Id)
 	if err != nil {
 		return err
 	}
@@ -103,47 +106,53 @@ func (a *App) sendPushNotificationSync(post *model.Post, user *model.User, chann
 
 	msg.Message = a.getPushNotificationMessage(post.Message, explicitMention, channelWideMention, hasFiles, msg.SenderName, channelName, channel.Type, replyToThreadType, userLocale)
 
+	tmpMessage := model.PushNotificationFromJson(strings.NewReader(msg.ToJson()))
+
 	for _, session := range sessions {
 
-		if session.IsExpired() {
-			continue
-		}
+		a.sendNotificationToPushProxyForCurrentSession(session, tmpMessage)
+	}
 
-		tmpMessage := model.PushNotificationFromJson(strings.NewReader(msg.ToJson()))
-		tmpMessage.SetDeviceIdAndPlatform(session.DeviceId)
-		tmpMessage.AckId = model.NewId()
+	return nil
+}
 
-		err := a.sendToPushProxy(*tmpMessage, session)
-		if err != nil {
-			a.NotificationsLog.Error("Notification error",
-				mlog.String("ackId", tmpMessage.AckId),
-				mlog.String("type", tmpMessage.Type),
-				mlog.String("userId", session.UserId),
-				mlog.String("postId", tmpMessage.PostId),
-				mlog.String("channelId", tmpMessage.ChannelId),
-				mlog.String("deviceId", tmpMessage.DeviceId),
-				mlog.String("status", err.Error()),
-			)
+func (a *App) sendNotificationToPushProxyForCurrentSession(session *model.Session, tmpMessage *model.PushNotification) {
+	if session.IsExpired() {
+		return
+	}
 
-			continue
-		}
+	tmpMessage.SetDeviceIdAndPlatform(session.DeviceId)
+	tmpMessage.AckId = model.NewId()
 
-		a.NotificationsLog.Info("Notification sent",
+	err := a.sendToPushProxy(*tmpMessage, session)
+	if err != nil {
+		a.NotificationsLog.Error("Notification error",
 			mlog.String("ackId", tmpMessage.AckId),
 			mlog.String("type", tmpMessage.Type),
 			mlog.String("userId", session.UserId),
 			mlog.String("postId", tmpMessage.PostId),
 			mlog.String("channelId", tmpMessage.ChannelId),
 			mlog.String("deviceId", tmpMessage.DeviceId),
-			mlog.String("status", model.PUSH_SEND_SUCCESS),
+			mlog.String("status", err.Error()),
 		)
 
-		if a.Metrics != nil {
-			a.Metrics.IncrementPostSentPush()
-		}
+		return
 	}
 
-	return nil
+	a.NotificationsLog.Info("Notification sent",
+		mlog.String("ackId", tmpMessage.AckId),
+		mlog.String("type", tmpMessage.Type),
+		mlog.String("userId", session.UserId),
+		mlog.String("postId", tmpMessage.PostId),
+		mlog.String("channelId", tmpMessage.ChannelId),
+		mlog.String("deviceId", tmpMessage.DeviceId),
+		mlog.String("status", model.PUSH_SEND_SUCCESS),
+	)
+
+	if a.Metrics != nil {
+		a.Metrics.IncrementPostSentPush()
+	}
+
 }
 
 func (a *App) sendPushNotification(notification *postNotification, user *model.User, explicitMention, channelWideMention bool, replyToThreadType string) {
@@ -219,7 +228,7 @@ func (a *App) getPushNotificationMessage(postMessage string, explicitMention, ch
 }
 
 func (a *App) ClearPushNotificationSync(currentSessionId, userId, channelId string) {
-	sessions, err := a.getMobileAppSessions(userId)
+	sessions, err := a.GetMobileAppSessions(userId)
 	if err != nil {
 		mlog.Error(err.Error())
 		return
@@ -313,6 +322,19 @@ func (a *App) pushNotificationWorker(notifications chan PushNotification) {
 				notification.channelWideMention,
 				notification.replyToThreadType,
 			)
+		case NOTIFICATION_TYPE_ALERT:
+			a.sendPushNotificationForCustomAlert(
+				notification.post,
+				notification.user,
+				notification.channel,
+				notification.channelName,
+				notification.senderName,
+				notification.explicitMention,
+				notification.channelWideMention,
+				notification.replyToThreadType,
+				notification.customMessage,
+				notification.session,
+			)
 		default:
 			mlog.Error(fmt.Sprintf("Invalid notification type %v", notification.notificationType))
 		}
@@ -403,7 +425,7 @@ func (a *App) SendAckToPushProxy(ack *model.PushNotificationAck) error {
 
 }
 
-func (a *App) getMobileAppSessions(userId string) ([]*model.Session, *model.AppError) {
+func (a *App) GetMobileAppSessions(userId string) ([]*model.Session, *model.AppError) {
 	result := <-a.Srv.Store.Session().GetSessionsWithActiveDeviceIds(userId)
 	if result.Err != nil {
 		return nil, result.Err
@@ -478,4 +500,52 @@ func DoesStatusAllowPushNotification(userNotifyProps model.StringMap, status *mo
 	}
 
 	return false
+}
+
+func (a *App) sendPushNotificationForCustomAlert(post *model.Post, user *model.User, channel *model.Channel, channelName string, senderName string,
+	explicitMention, channelWideMention bool, replyToThreadType string, customMessage *string, session *model.Session) *model.AppError {
+
+	msg := model.PushNotification{
+		Category:  "",
+		Version:   model.PUSH_MESSAGE_V2,
+		Type:      model.PUSH_TYPE_MESSAGE,
+		TeamId:    channel.TeamId,
+		ChannelId: channel.Id,
+		PostId:    post.Id,
+		RootId:    post.RootId,
+		SenderId:  "UChat",
+		Message:   *customMessage,
+		Badge:     0,
+	}
+
+	cfg := a.Config()
+
+	contentsConfig := *cfg.EmailSettings.PushNotificationContents
+	if contentsConfig != model.GENERIC_NO_CHANNEL_NOTIFICATION || channel.Type == model.CHANNEL_DIRECT {
+		msg.ChannelName = channelName
+	}
+
+	tmpMessage := model.PushNotificationFromJson(strings.NewReader(msg.ToJson()))
+
+	a.sendNotificationToPushProxyForCurrentSession(session, tmpMessage)
+
+	return nil
+}
+
+func (a *App) SendCustomAlertToPushNotificationHub(post *model.Post, user *model.User, channel *model.Channel, custMessage *string, session *model.Session) {
+
+	c := a.Srv.PushNotificationsHub.GetGoChannelFromUserId(user.Id)
+	c <- PushNotification{
+		notificationType:  NOTIFICATION_TYPE_ALERT,
+		post:              post,
+		user:              user,
+		userId:            user.Id,
+		channel:           channel,
+		senderName:        "UChat",
+		channelName:       channel.Name,
+		channelId:         channel.Id,
+		replyToThreadType: "",
+		customMessage:     custMessage,
+		session:           session,
+	}
 }
