@@ -317,6 +317,7 @@ type SessionStore interface {
 	Get(sessionIdOrToken string) StoreChannel
 	GetSessions(userId string) StoreChannel
 	GetSessionsWithActiveDeviceIds(userId string) StoreChannel
+	GetAllSessionsWithActiveDeviceIds(limit int, offset int) StoreChannel
 	Remove(sessionIdOrToken string) StoreChannel
 	RemoveAllSessions() StoreChannel
 	PermanentDeleteSessionsByUser(teamId string) StoreChannel

@@ -101,6 +101,15 @@ func (a *App) GetSessions(userId string) ([]*model.Session, *model.AppError) {
 
 }
 
+func (a *App) GetAllSessionsWithActiveDeviceIds(limit int, offset int) ([]*model.Session, *model.AppError) {
+	result := <-a.Srv.Store.Session().GetAllSessionsWithActiveDeviceIds(limit, offset)
+	if result.Err != nil {
+		return nil, result.Err
+	}
+	return result.Data.([]*model.Session), nil
+
+}
+
 func (a *App) RevokeAllSessions(userId string) *model.AppError {
 	result := <-a.Srv.Store.Session().GetSessions(userId)
 	if result.Err != nil {

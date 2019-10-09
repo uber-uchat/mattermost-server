@@ -70,6 +70,7 @@ type Server struct {
 	HubsStopCheckingForDeadlock chan bool
 
 	PushNotificationsHub PushNotificationsHub
+	CustomAlertsJob      CustomAlertsJob
 
 	runjobs bool
 	Jobs    *jobs.JobServer
@@ -205,6 +206,9 @@ func NewServer(options ...Option) (*Server, error) {
 		s.InitEmailBatching()
 	})
 
+	//Start the worker for processing custom push alerts request
+	s.InitCustomAlerts()
+
 	// Start plugin health check job
 	pluginsEnvironment := s.PluginsEnvironment
 	if pluginsEnvironment != nil {
@@ -336,6 +340,7 @@ func (s *Server) Shutdown() error {
 	mlog.Info("Stopping Server...")
 
 	s.RunOldAppShutdown()
+	s.StopCustomAlertsJob()
 
 	s.StopHTTPServer()
 	s.WaitForGoroutines()

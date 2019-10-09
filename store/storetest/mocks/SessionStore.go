@@ -66,6 +66,23 @@ func (_m *SessionStore) GetSessions(userId string) store.StoreChannel {
 	return r0
 }
 
+// GetAllSessionsWithActiveDeviceIds provides a mock function with given fields: limit, offset
+func (_m *SessionStore) GetAllSessionsWithActiveDeviceIds(limit int, offset int) store.StoreChannel {
+	ret := _m.Called(limit, offset)
+
+	var r0 store.StoreChannel
+	if rf, ok := ret.Get(0).(func(int, int) store.StoreChannel); ok {
+		r0 = rf(limit, offset)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(store.StoreChannel)
+		}
+	}
+
+	return r0
+}
+
+
 // GetSessionsWithActiveDeviceIds provides a mock function with given fields: userId
 func (_m *SessionStore) GetSessionsWithActiveDeviceIds(userId string) store.StoreChannel {
 	ret := _m.Called(userId)
