@@ -1330,16 +1330,15 @@ func (a *App) GetChannelMembersTimezones(channelId string) ([]string, *model.App
 }
 
 func (a *App) GetChannelMembersEmails(channelId string) ([]string, *model.AppError) {
-	result := <-a.Srv.Store.Channel().GetChannelMembersEmails(channelId)
+	result := <-a.Srv.Store.User().GetAllProfilesInChannel(channelId, true)
+
 	if result.Err != nil {
 		return nil, result.Err
 	}
 	var emails []string
-
-	members := result.Data.([]*model.ChannelMemberForExport)
-
-	for _, member := range members {
-		emails = append(emails, member.Username)
+	members := result.Data.(map[string]*model.User)
+	for _, profile := range members {
+		emails = append(emails, profile.Email)
 	}
 	return emails, nil
 }
