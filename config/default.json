@@ -385,7 +385,8 @@
         "LinkMetadataTimeoutMilliseconds": 5000,
         "RestrictSystemAdmin": false,
         "EnableClickToReply": false,
-        "EnableTelemetry": true
+        "EnableTelemetry": false,
+        "TelemetryServerListenAddress": ":8069"
     },
     "AnalyticsSettings": {
         "MaxUsersForStatistics": 2500

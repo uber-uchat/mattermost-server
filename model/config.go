@@ -749,6 +749,7 @@ type ExperimentalSettings struct {
 	LinkMetadataTimeoutMilliseconds *int64 `restricted:"true"`
 	RestrictSystemAdmin             *bool  `restricted:"true"`
 	EnableTelemetry                 *bool
+	TelemetryServerListenAddress    *string
 }
 
 func (s *ExperimentalSettings) SetDefaults() {

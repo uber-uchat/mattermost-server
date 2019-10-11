@@ -19,7 +19,10 @@ import (
 	"github.com/mattermost/mattermost-server/wsapi"
 	"github.com/mattermost/viper"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
+	"log"
+	"net/http"
 )
 
 var serverCmd = &cobra.Command{
@@ -78,6 +81,11 @@ func runServer(configStore config.Store, disableConfigWatch bool, usedPlatform b
 		return serverErr
 	}
 
+	// Start server so prometheus scrapers can fetch metric collected by prometheus clients
+	go startTelemetryServer(
+		server.Config().ExperimentalSettings.TelemetryServerListenAddress,
+		server.Log.StdLog(mlog.String("source", "telemetry_server")))
+
 	api := api4.Init(server, server.AppOptions, server.Router)
 	wsapi.Init(server.FakeApp(), server.WebSocketRouter)
 	web.New(server, server.AppOptions, server.Router)
@@ -95,6 +103,23 @@ func runServer(configStore config.Store, disableConfigWatch bool, usedPlatform b
 	<-interruptChan
 
 	return nil
+}
+
+func startTelemetryServer(telemetryAddress *string, logger *log.Logger) {
+	logger.Println("Telemetry Server starting.")
+	defer func() {
+		if r := recover(); r != nil {
+			logger.Println("Recovering from telemetry server panic. Panic was: %v", r)
+		}
+	}()
+
+	clientMetricServer := &http.Server{
+		Addr:     *telemetryAddress,
+		Handler:  promhttp.Handler(),
+		ErrorLog: logger,
+	}
+
+	logger.Println("Telemetry Server stopped.", clientMetricServer.ListenAndServe())
 }
 
 func notifyReady() {

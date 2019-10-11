@@ -39,8 +39,6 @@ func (api *API) InitSystem() {
 
 	api.BaseRoutes.ApiRoot.Handle("/notifications/ack", api.ApiSessionRequired(pushNotificationAck)).Methods("POST")
 	api.BaseRoutes.ApiRoot.Handle("/telemetry/mobile", api.ApiSessionRequired(collectMobileTelemetry)).Methods("POST")
-
-	//api.BaseRoutes.ApiRoot.Handle("/metrics", promhttp.Handler())
 }
 
 func getSystemPing(c *Context, w http.ResponseWriter, r *http.Request) {
