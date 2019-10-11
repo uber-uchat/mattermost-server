@@ -107,7 +107,6 @@ func (a *App) UpdateOooRequestUser(userId string, user *model.User, delayedUpdat
 	if userExists {
 		if delayedUpdate && status.Status == model.STATUS_OUT_OF_OFFICE {
 			a.SetStatusOnline(userId, true)
-			a.DisableAutoResponder(userId, false)
 		}
 
 		if !delayedUpdate {
