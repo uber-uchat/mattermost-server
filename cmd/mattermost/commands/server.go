@@ -4,11 +4,6 @@
 package commands
 
 import (
-	"net"
-	"os"
-	"os/signal"
-	"syscall"
-
 	"github.com/mattermost/mattermost-server/api4"
 	"github.com/mattermost/mattermost-server/app"
 	"github.com/mattermost/mattermost-server/config"
@@ -19,7 +14,14 @@ import (
 	"github.com/mattermost/mattermost-server/wsapi"
 	"github.com/mattermost/viper"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
+	"log"
+	"net"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 var serverCmd = &cobra.Command{
@@ -78,6 +80,11 @@ func runServer(configStore config.Store, disableConfigWatch bool, usedPlatform b
 		return serverErr
 	}
 
+	// Start server so prometheus scrapers can fetch metric collected by prometheus clients
+	go startTelemetryServer(
+		server.Config().ExperimentalSettings.TelemetryServerListenAddress,
+		server.Log.StdLog(mlog.String("source", "telemetry_server")))
+
 	api := api4.Init(server, server.AppOptions, server.Router)
 	wsapi.Init(server.FakeApp(), server.WebSocketRouter)
 	web.New(server, server.AppOptions, server.Router)
@@ -95,6 +102,17 @@ func runServer(configStore config.Store, disableConfigWatch bool, usedPlatform b
 	<-interruptChan
 
 	return nil
+}
+
+func startTelemetryServer(telemetryAddress *string, logger *log.Logger) {
+	logger.Println("Telemetry Server starting.")
+	clientMetricServer := &http.Server{
+		Addr:     *telemetryAddress,
+		Handler:  promhttp.Handler(),
+		ErrorLog: logger,
+	}
+
+	logger.Println("Telemetry Server stopped.", clientMetricServer.ListenAndServe())
 }
 
 func notifyReady() {
