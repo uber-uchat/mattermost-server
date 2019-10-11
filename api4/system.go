@@ -6,7 +6,6 @@ package api4
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	"runtime"
 
@@ -40,8 +39,6 @@ func (api *API) InitSystem() {
 
 	api.BaseRoutes.ApiRoot.Handle("/notifications/ack", api.ApiSessionRequired(pushNotificationAck)).Methods("POST")
 	api.BaseRoutes.ApiRoot.Handle("/telemetry/mobile", api.ApiSessionRequired(collectMobileTelemetry)).Methods("POST")
-
-	api.BaseRoutes.ApiRoot.Handle("/metrics", promhttp.Handler())
 }
 
 func getSystemPing(c *Context, w http.ResponseWriter, r *http.Request) {
