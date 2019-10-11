@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
 	"github.com/mattermost/mattermost-server/api4"
 	"github.com/mattermost/mattermost-server/app"
 	"github.com/mattermost/mattermost-server/config"
@@ -106,6 +107,12 @@ func runServer(configStore config.Store, disableConfigWatch bool, usedPlatform b
 
 func startTelemetryServer(telemetryAddress *string, logger *log.Logger) {
 	logger.Println("Telemetry Server starting.")
+	defer func() {
+		if r := recover(); r != nil {
+			logger.Println("Recovering from telemetry server panic. Panic was: %v", r)
+		}
+	}()
+
 	clientMetricServer := &http.Server{
 		Addr:     *telemetryAddress,
 		Handler:  promhttp.Handler(),
