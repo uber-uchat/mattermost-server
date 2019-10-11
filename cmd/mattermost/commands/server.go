@@ -4,6 +4,10 @@
 package commands
 
 import (
+	"net"
+	"os"
+	"os/signal"
+	"syscall"
 	"github.com/mattermost/mattermost-server/api4"
 	"github.com/mattermost/mattermost-server/app"
 	"github.com/mattermost/mattermost-server/config"
@@ -17,11 +21,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
 	"log"
-	"net"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 var serverCmd = &cobra.Command{
