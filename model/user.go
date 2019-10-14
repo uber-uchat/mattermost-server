@@ -504,7 +504,10 @@ func (u *User) ClearNonProfileFields() {
 	u.MfaSecret = ""
 	u.EmailVerified = false
 	u.AllowMarketing = false
-	u.NotifyProps = StringMap{}
+	u.NotifyProps = StringMap{
+		AUTO_RESPONDER_TO_DATE: u.NotifyProps[AUTO_RESPONDER_TO_DATE],
+		AUTO_RESPONDER_TO_TIME: u.NotifyProps[AUTO_RESPONDER_TO_TIME],
+	}
 	u.LastPasswordUpdate = 0
 	u.FailedAttempts = 0
 }
