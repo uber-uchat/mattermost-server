@@ -4,6 +4,7 @@
 package commands
 
 import (
+	"fmt"
 	"net"
 	"os"
 	"os/signal"
@@ -109,7 +110,7 @@ func startTelemetryServer(telemetryAddress *string, logger *log.Logger) {
 	logger.Println("Telemetry Server starting.")
 	defer func() {
 		if r := recover(); r != nil {
-			logger.Println("Recovering from telemetry server panic. Panic was: %v", r)
+			logger.Println(fmt.Sprintf("Recovering from telemetry server panic. Panic was: %v", r))
 		}
 	}()
 

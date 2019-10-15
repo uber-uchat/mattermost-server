@@ -912,3 +912,37 @@ func TestDefaultChannelNames(t *testing.T) {
 	expect = []string{"town-square", "foo", "bar"}
 	require.ElementsMatch(t, expect, actual)
 }
+
+func TestGetChannelMembersEmails(t *testing.T) {
+	th := Setup(t).InitBasic()
+	defer th.TearDown()
+
+	userRequestorId := ""
+	postRootId := ""
+	if _, err := th.App.AddChannelMember(th.BasicUser2.Id, th.BasicChannel, userRequestorId, postRootId); err != nil {
+		t.Fatal("Failed to add user to channel. Error: " + err.Message)
+	}
+
+	user := th.BasicUser
+	th.App.UpdateUser(user, false)
+
+	user2 := th.BasicUser2
+	th.App.UpdateUser(user2, false)
+
+	user3 := model.User{Email: strings.ToLower(model.NewId()) + "success+test@example.com", Nickname: "Darth Vader", Username: "vader" + model.NewId(), Password: "passwd1", AuthService: ""}
+	ruser, _ := th.App.CreateUser(&user3)
+	th.App.AddUserToChannel(ruser, th.BasicChannel)
+
+	ruser.Timezone["automaticTimezone"] = "NoWhere/Island"
+	th.App.UpdateUser(ruser, false)
+
+	user4 := model.User{Email: strings.ToLower(model.NewId()) + "success+test@example.com", Nickname: "Darth Vader", Username: "vader" + model.NewId(), Password: "passwd1", AuthService: ""}
+	ruser, _ = th.App.CreateUser(&user4)
+	th.App.AddUserToChannel(ruser, th.BasicChannel)
+
+	email_ids, err := th.App.GetChannelMembersEmails(th.BasicChannel.Id)
+	if err != nil {
+		t.Fatal("Failed to get the member emails for a channel. Error: " + err.Error())
+	}
+	assert.Equal(t, 2, len(email_ids))
+}

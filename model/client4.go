@@ -4412,3 +4412,13 @@ func (c *Client4) PatchGroupSyncable(groupID, syncableID string, syncableType Gr
 	defer closeBody(r)
 	return GroupSyncableFromJson(r.Body), BuildResponse(r)
 }
+
+// GetChannelMembersEmails gets a list of emails for a channel.
+func (c *Client4) GetChannelMembersEmails(channelId string) (string, *Response) {
+	r, err := c.DoApiGet(c.GetChannelRoute(channelId)+"/emails", "")
+	if err != nil {
+		return "error", BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+	return StringFromJson(r.Body), BuildResponse(r)
+}
