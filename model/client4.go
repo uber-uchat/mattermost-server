@@ -4415,7 +4415,7 @@ func (c *Client4) PatchGroupSyncable(groupID, syncableID string, syncableType Gr
 
 // GetChannelMembersEmails gets a list of emails for a channel.
 func (c *Client4) GetChannelMembersEmails(channelId string) (string, *Response) {
-	r, err := c.DoApiGet(c.GetChannelRoute(channelId)+"/emails", "")
+	r, err := c.DoApiGet(c.GetChannelRoute(channelId)+"/members/emails", "")
 	if err != nil {
 		return "error", BuildErrorResponse(r, err)
 	}
