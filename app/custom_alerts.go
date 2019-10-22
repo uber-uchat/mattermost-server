@@ -1,3 +1,6 @@
+// Copyright (c) 2017-present Mattermost, Inc. All Rights Reserved.
+// See License.txt for license information.
+
 package app
 
 import (
@@ -28,7 +31,7 @@ func (a *App) StartCustomAlertsWorker(alertRequests chan model.CustomAlertReques
 }
 
 func (a *App) GetChannelForCustomPushAlerts() chan model.CustomAlertRequest {
-	return a.Srv.CustomAlertsJob.Channel;
+	return a.Srv.CustomAlertsJob.Channel
 }
 
 func (s *Server) StopCustomAlertsJob() {

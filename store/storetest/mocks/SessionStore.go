@@ -82,7 +82,6 @@ func (_m *SessionStore) GetAllSessionsWithActiveDeviceIds(limit int, offset int)
 	return r0
 }
 
-
 // GetSessionsWithActiveDeviceIds provides a mock function with given fields: userId
 func (_m *SessionStore) GetSessionsWithActiveDeviceIds(userId string) store.StoreChannel {
 	ret := _m.Called(userId)

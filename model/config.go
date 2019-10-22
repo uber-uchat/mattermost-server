@@ -781,6 +781,10 @@ func (s *ExperimentalSettings) SetDefaults() {
 	if s.EnableTelemetry == nil {
 		s.EnableTelemetry = NewBool(false)
 	}
+
+	if s.TelemetryServerListenAddress == nil {
+		s.TelemetryServerListenAddress = NewString("8069")
+	}
 }
 
 type AnalyticsSettings struct {
